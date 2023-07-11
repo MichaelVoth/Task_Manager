@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Details</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="container">
+            <div id="header"></div>
+            <div id="content">
+                <div class="xlg_col">
+                    <div class="nav">
+                        <h1>{{task.title}} Details</h1>
+                        <div>
+                            <a href="/dashboard">Home</a>
+                            <a href="/logout">Logout</a>
+                        </div>
+                    </div>
+                    <fieldset>
+                        <legend>Task Info</legend>
+                        <h2>Title: {{task.title}}</h2>
+                        <h2>Due Date: {{task.due_date}}</h2>
+                        <h2>Details: {{task.details}}</h2>
+                        {% if task.complete == false or task.complete is none %}
+                        <form action="/complete/{{task.id}}" method="post">
+                        <input type=submit value="Mark Complete">
+                        </form>
+                        {% else %}
+                        <form action="/incomplete/{{task.id}}" method="post">
+                        <input type=submit value="Mark Incomplete">
+                        </form>
+                        {% endif %}
+                        {% if session['admin'] %}
+                        <a href="/edit/{{task.id}}">Edit</a> | 
+                        <a href="/delete/{{task.id}}">Delete</a>
+                        {%endif%}
+                    </fieldset>
+                    <h2>Task Messages:</h2>
+                    <fieldset>
+
+                    </fieldset>
+                </div>
+            </div>
+            <div id="footer">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

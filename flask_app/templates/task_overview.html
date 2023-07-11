@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Overview</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="container">
+            <div id="header"></div>
+            <div id="content">
+                <div class="xlg_col">
+                    <div class="nav">
+                        <h1>Welcome {{user.first_name}}!</h1>
+                        <div>
+                            {% if user.admin %}
+                            <a href="/create">Create Task</a>
+                            <a href="/dashboard">Dashboard</a>
+                            {% endif %}
+                            <a href="/logout">Logout</a>
+                        </div>
+                    </div>
+
+                    <div class="flex">
+                        <div class="xl_col">
+                            <h2>All Tasks</h2>
+                            <table id="task__overview_table">
+                                <thead>
+                                    <tr>
+                                        <th>Task</th>
+                                        <th>Due Date</th>
+                                        <th>Assignee</th>
+                                        <th>Complete</th>
+                                        <th>Completed on</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for a_task in tasks: %}
+                                    <tr>
+                                        <td><a href="/show/{{a_task.id}}">{{a_task.title}}</a></td>
+                                        <td>{{a_task.due_date}}</td>
+                                        {% if a_task.assignee_id %}
+                                        <td><a href="/user/{{a_task.assignee_id}}">{{a_task.assignee.first_name}}
+                                                {{a_task.assignee.last_name}}</a></td>
+                                        {% else %}
+                                        <td>Unassigned</td>
+                                        {% endif %}
+                                        {% if a_task.complete == true %}
+                                        <td>Yes</td>
+                                        {% else %}
+                                        <td>No</td>
+                                        {% endif %}
+                                        {% if a_task.completed_on %}
+                                        <td>{{a_task.completed_on}}</td>
+                                        {% else %}
+                                        <td></td>
+                                        {% endif %}
+                                    </tr>
+                                    {%endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="footer">
+            </div>
+        </div>
+</body>
+<script>
+    $(document).ready( function () {
+        $('#task__overview_table').DataTable();
+    } );
+    </script>
+    
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="container">
+            <div id="header"></div>
+            <div id="content">
+                <div class="xlg_col">
+                    <div class="nav">
+                        <h1>Welcome {{user.first_name}}!</h1>
+                        <div>
+                            {% if user.admin %}
+                            <a href="/create">Create Task</a>
+                            <a href="/task/overview">Task Overview</a>
+                            {% endif %}
+                            <a href="/logout">Logout</a>
+                        </div>
+                    </div>
+
+                    <div class="flex">
+                        <div class="col">
+                            <h2>Your Tasks</h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Task</th>
+                                        <th>Due Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for a_task in tasks: %}
+                                    <tr>
+                                        <td><a href="/show/{{a_task.id}}">{{a_task.title}}</a></td>
+                                        <td>{{a_task.due_date}}</td>
+                                    </tr>
+                                    {%endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col">
+                            <h2>Available Tasks</h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Task</th>
+                                        <th>Due Date</th>
+                                        <th> Take On</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for a_task in available_tasks %}
+                                    <tr>
+                                        <td><a href="/show/{{a_task.id}}">{{a_task.title}}</a></td>
+                                        <td>{{a_task.due_date}}</td>
+                                        <td>
+                                            <form action="/add/assignee/{{user.id}}/task/{{a_task.id}}" method="POST">
+                                                <input type="submit" value="Take On">
+                                            </form>
+                                        </td>
+                                        
+                                    </tr>
+                                    {%endfor%}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="footer">
+            </div>
+        </div>
+</body>
+
+</html>
