@@ -42,9 +42,23 @@
                         {%endif%}
                     </fieldset>
                     <h2>Task Messages:</h2>
-                    <fieldset>
-
-                    </fieldset>
+                </fieldset>
+                <fieldset>
+                    <table>
+                        {% for message in messages %}
+                        <tr>
+                            <td><h3>{{message.author.first_name}}:</h3></td>
+                            <td>{{message.message}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <form action="/message" method="post">
+                        <input type="hidden" name="author_id" value="{{session['user_id']}}">
+                        <input type="hidden" name="task_id" value="{{task.id}}">
+                        <input type="text" name="message" id="message">
+                        <input type="submit" value="Send Message">
+                    </form>
+                </fieldset>
                 </div>
             </div>
             <div id="footer">

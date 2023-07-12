@@ -1,7 +1,7 @@
 
 from flask_app import app   #Imports app
 from flask_app.config.mysqlconnection import connectToMySQL #connects to DB
-from flask_app.controllers import user_routes, task_routes #connects routes
+from flask_app.controllers import user_routes, task_routes, message_routes #connects routes
 
 
 

@@ -2,6 +2,7 @@ from flask import render_template, redirect, request, session
 from flask_app import app
 from flask_app.models.users import User
 from flask_app.models.tasks import Task
+from flask_app.models.messages import Message
 
 @app.route('/dashboard')
 def dashboard_page():
@@ -53,7 +54,8 @@ def show_task_page(id):
     if session.get('user_id') is None:
         return redirect('/')
     task = Task.get_task_by_id({'id': id})
-    return render_template('task_details.html', task=task)
+    messages = Message.get_messages({'id': id})
+    return render_template('task_details.html', task=task, messages=messages)
 
 @app.route('/edit/<int:id>') # Edit task page
 def edit_task(id):
