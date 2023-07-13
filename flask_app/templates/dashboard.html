@@ -19,7 +19,7 @@
                     <div class="nav">
                         <h1>Welcome {{user.first_name}}!</h1>
                         <div>
-                            {% if user.admin %}
+                            {% if session['admin'] %}
                             <a href="/create">Create Task</a>
                             <a href="/task/overview">Task Overview</a>
                             {% endif %}

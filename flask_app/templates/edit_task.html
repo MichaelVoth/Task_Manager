@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+
+<body>
+    <div id="wrapper">
+        <div id="container">
+            <div id="header"></div>
+            <div id="content">
+                <div class="xlg_col">
+                    <div class="nav">
+                        <h1>Edit Task</h1>
+                        <div>
+                            <a href="/dashboard">Back to dashboard</a>
+                            <a href="/logout">Logout</a>
+                        </div>
+                    </div>
+                    <form action="/update/{{task.id}}" method="POST">
+                        <fieldset class="form">
+                            <legend>Edit this task</legend>
+                            <label for="title">Title:</label>
+                            <input type="text" name="title" id="title" value="{{task.title}}">
+                            <br>
+                            <label for="due_date">Due Date:</label>
+                            <input type="date" name="due_date" id="due_date" value="{{task.due_date}}">
+                            <br>
+                            <label for="assignee_id">Assign to:</label>
+                            <select name="assignee_id" id="assignee_id">
+                                <option value="">Unassigned</option>
+                                {% for a_user in user %}
+                                <option value="{{a_user.id}}" {% if a_user.id==task.assignee_id %} selected {% endif %}>
+                                    {{a_user.first_name}} {{a_user.last_name}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <br>
+                            <label for="details">Details:</label>
+                            <br>
+                            <textarea name="details" id="details" cols="30" rows="10">{{task.details}}</textarea>
+                            <br>
+                            <input class="submit" type="submit" value="Edit Task">
+                            {% with messages = get_flashed_messages(category_filter=["create"]) %}
+                            {% if messages %}
+                            {% for message in messages %}
+                            <p class="error">{{message}}</p>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div id="footer"></div>
+        </div>
+    </div>
+
+</body>
+
+</html>

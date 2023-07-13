@@ -76,18 +76,20 @@ def show_task_page(id):
 def edit_task(id):
     if session.get('user_id') is None:
         return redirect('/')
-    task = Task.get_task_by_id({'id': id})
-    return render_template('edit.html', task=task)
+    task = Task.get_task_by_id({'id': id}, session['user_id'])
+    user = User.get_all_users() # Get all users for assignee dropdown.
+    return render_template('edit_task.html', task=task, user=user)
 
-@app.route('/update/task', methods=['POST']) # Update task in DB.
-def update_task():
+@app.route('/update/<int:id>', methods=['POST']) # Update task in DB.
+def update_task(id):
     if session.get('user_id') is None:
         return redirect('/')
     data = {
-        'id': request.form['id'],
+        'task_id': id,
         'title': request.form['title'],
-        'description': request.form['description'],
+        'details': request.form['details'],
         'due_date': request.form['due_date'],
+        'assignee_id': int(request.form['assignee_id']) if request.form['assignee_id'] != '' else None,
     }
     Task.update_task(data)
     return redirect('/dashboard')

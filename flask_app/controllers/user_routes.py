@@ -67,6 +67,7 @@ def login():
         return redirect('/')
     #Adds user id to session data.
     session['user_id'] = user_in_db.id
+    session['admin'] = user_in_db.admin
 
     return redirect("/dashboard")
 

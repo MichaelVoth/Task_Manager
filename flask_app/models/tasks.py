@@ -190,16 +190,23 @@ class Task:
     def update_task(cls, data):
         query = '''
             UPDATE tasks
-            SET title = %(title)s, due_date = %(due_date)s, details = %(details)s
+            SET title = %(title)s, due_date = %(due_date)s, details = %(details)s, assignee_id = %(assignee_id)s
             WHERE tasks.id = %(task_id)s;
         '''
         return connectToMySQL(cls.DB).query_db(query, data)
     
-    # Delete:
+    #Delete:
     @classmethod
     def delete_task(cls, data):
-        query = '''DELETE FROM tasks WHERE id = %(id)s;'''
-        return connectToMySQL(cls.DB).query_db(query, data)
-    
+        task_id = data['id']
+        
+        # Delete the messages associated with the task
+        query_delete_messages = 'DELETE FROM messages WHERE task_id = %(task_id)s;'
+        connectToMySQL(cls.DB).query_db(query_delete_messages, {'task_id': task_id})
+        
+        # Delete the task
+        query_delete_task = 'DELETE FROM tasks WHERE id = %(task_id)s;'
+        connectToMySQL(cls.DB).query_db(query_delete_task, {'task_id': task_id})
+
     
 
