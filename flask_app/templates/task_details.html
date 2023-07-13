@@ -29,36 +29,61 @@
                         <h2>Details: {{task.details}}</h2>
                         {% if task.complete == false or task.complete is none %}
                         <form action="/complete/{{task.id}}" method="post">
-                        <input type=submit value="Mark Complete">
+                            <input type=submit value="Mark Complete">
                         </form>
                         {% else %}
                         <form action="/incomplete/{{task.id}}" method="post">
-                        <input type=submit value="Mark Incomplete">
+                            <input type=submit value="Mark Incomplete">
                         </form>
                         {% endif %}
                         {% if session['admin'] %}
-                        <a href="/edit/{{task.id}}">Edit</a> | 
+                        <a href="/edit/{{task.id}}">Edit</a> |
                         <a href="/delete/{{task.id}}">Delete</a>
                         {%endif%}
                     </fieldset>
                     <h2>Task Messages:</h2>
-                </fieldset>
-                <fieldset>
-                    <table>
-                        {% for message in messages %}
-                        <tr>
-                            <td><h3>{{message.author.first_name}}:</h3></td>
-                            <td>{{message.message}}</td>
-                        </tr>
+                    </fieldset>
+                    <fieldset>
+                        <form action="/message" method="post">
+                            <input type="hidden" name="author_id" value="{{ session['user_id'] }}">
+                            <input type="hidden" name="task_id" value="{{ task.id }}">
+                            <input type="text" name="message" id="message">
+                            <input type="submit" value="Send Message">
+                        </form>
+                        {% for message in task.read_messages %}
+                        <div class="message-container">
+                            {% if message.author.id == session['user_id'] %}
+                            <div class="message right">
+                                <p><strong>You said:</strong> {{ message.message }}</p>
+                                
+                            </div>
+                            {% else %}
+                            <div class="message left">
+                                <p><strong>{{ message.author.first_name }} {{ message.author.last_name }} said:</strong>
+                                    {{ message.message }}</p>
+                                <p class="tiny">(Read)</p>
+                            </div>
+                            {% endif %}
+                        </div>
                         {% endfor %}
-                    </table>
-                    <form action="/message" method="post">
-                        <input type="hidden" name="author_id" value="{{session['user_id']}}">
-                        <input type="hidden" name="task_id" value="{{task.id}}">
-                        <input type="text" name="message" id="message">
-                        <input type="submit" value="Send Message">
-                    </form>
-                </fieldset>
+
+                        {% for message in task.unread_messages %}
+                        <div class="message-container">
+                            {% if message.author.id == session['user_id'] %}
+                            <div class="message right">
+                                <p><strong>You said:</strong> {{ message.message }}</p>
+                            </div>
+                            {% else %}
+                            <div class="message left">
+                                <p><strong>{{ message.author.first_name }} said:</strong> {{ message.message }}</p>
+                                <p class="tiny">(Unread)</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                    </fieldset>
+
                 </div>
             </div>
             <div id="footer">

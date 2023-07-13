@@ -2,7 +2,7 @@ from flask_app.config.mysqlconnection import connectToMySQL
 from flask import flash
 from flask_app import app
 from flask_app.models.users import User
-from flask_app.models.tasks import Task
+
 
 
 class Message:
@@ -13,19 +13,31 @@ class Message:
         self.message = data['message']
         self.task_id = data['task_id']
         self.author_id = data['author_id']
-        self.read = data['read']
+        self.is_read = data['is_read']
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
         self.author = None
         
-    
+    #Static
+    @staticmethod
+    def validate_message(message):
+        is_valid = True
+        if not len(message['message']) > 1:
+            flash("* Message cannot be blank.", 'create')
+            is_valid = False
+        return is_valid
+
+    #Class Methods
+
+    #Create
     @classmethod
     def save(cls, data):
-        query = '''INSERT INTO messages (author_id, task_id, message)
-                VALUES (%(author_id)s, %(task_id)s, %(message)s);'''
+        query = '''INSERT INTO messages (author_id, task_id, message, is_read)
+                VALUES (%(author_id)s, %(task_id)s, %(message)s, false);'''
         return connectToMySQL(cls.DB).query_db(query, data)
+
     
-    
+    #Read
     @classmethod
     def get_messages(cls, data):
         query = '''SELECT * FROM messages
@@ -48,13 +60,43 @@ class Message:
             message_obj.author = User(user_data)
             messages.append(message_obj)
         return messages
+    
+    @classmethod
+    def get_messages_for_task(cls, data):
+        query = '''SELECT * FROM messages WHERE task_id = %(task_id)s;'''
+        results = connectToMySQL(cls.DB).query_db(query, data)
+        
+        messages = []
+        for message in results:
+            messages.append(cls(message))
+        
+        return messages
+    
+    @classmethod
+    def check_if_read(cls, data):
+        query = '''SELECT * FROM messages WHERE id = %(id)s AND `is_read` = 0;'''
+        results = connectToMySQL(cls.DB).query_db(query, data)
+        if len(results) > 0:
+            return False
+        return True
+    
 
-#Static
-    @staticmethod
-    def validate_message(message):
-        is_valid = True
-        if not len(message['message']) > 1:
-            flash("* Message cannot be blank.", 'create')
-            is_valid = False
+    #Update
+    @classmethod
+    def set_read(cls, data):
+        query = "UPDATE messages SET is_read = true WHERE id = %(id)s"
+        return connectToMySQL(cls.DB).query_db(query, data)
 
-        return is_valid
+
+    
+    @classmethod
+    def edit_message(cls, data):
+        query = '''UPDATE messages SET message = %(message)s WHERE id = %(id)s;'''
+        return connectToMySQL(cls.DB).query_db(query, data)
+
+    #Delete
+    @classmethod
+    def delete_message(cls, data):
+        query = '''DELETE FROM messages WHERE id = %(id)s;'''
+        return connectToMySQL(cls.DB).query_db(query, data)
+    

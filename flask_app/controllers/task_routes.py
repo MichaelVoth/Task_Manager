@@ -6,12 +6,17 @@ from flask_app.models.messages import Message
 
 @app.route('/dashboard')
 def dashboard_page():
-    if session.get('user_id') is None: # If user is not logged in, redirect to login page.
+    if session.get('user_id') is None:
         return redirect('/')
-    user = User.get_by_id({'id': session['user_id']}) # Get user info by id in session.
-    tasks = Task.get_incomplete_tasks_for_user({'id': session['user_id']}) # Get all tasks for user.
-    available_tasks = Task.get_available_tasks() # Get all open tasks.
-    return render_template('dashboard.html', user=user, tasks=tasks, available_tasks=available_tasks)
+
+    user_id = session['user_id']
+    user = User.get_by_id({'id': user_id})
+    tasks = Task.get_incomplete_tasks_for_user({'id': user_id})
+    available_tasks = Task.get_available_tasks()
+
+    tasks_with_unread_messages = Task.get_tasks_with_unread_messages(user_id)
+
+    return render_template('dashboard.html', user=user, tasks=tasks, available_tasks=available_tasks, tasks_with_unread_messages=tasks_with_unread_messages)
 
 
 @app.route('/create') # Create task page.
@@ -53,9 +58,19 @@ def add_assignee(id, task_id):
 def show_task_page(id):
     if session.get('user_id') is None:
         return redirect('/')
-    task = Task.get_task_by_id({'id': id})
-    messages = Message.get_messages({'id': id})
-    return render_template('task_details.html', task=task, messages=messages)
+    
+    # Get the task
+    task = Task.get_task_by_id({'id': id}, session['user_id'])
+
+    # If the current user is the assignee, mark unread messages as read
+    if session['user_id'] == task.assignee_id:
+        for message in task.unread_messages:
+            Message.set_read({'id': message.id}) 
+            task.read_messages.append(message)
+        task.unread_messages = []
+
+    # messages = Message.get_messages({'id': id})
+    return render_template('task_details.html', task=task)
 
 @app.route('/edit/<int:id>') # Edit task page
 def edit_task(id):

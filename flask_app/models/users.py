@@ -16,11 +16,11 @@ class User:
         self.id = data['id']
         self.first_name = data['first_name']
         self.last_name = data['last_name']
-        self.email = data['email']
-        self.password = data['password']
-        self.admin = data['admin']
-        self.created_at = data['created_at']
-        self.updated_at = data['updated_at']
+        self.email = data.get('email', None)
+        self.password = data.get('password', None)
+        self.admin = data.get('admin', None)
+        self.created_at = data.get('created_at', None)
+        self.updated_at = data.get('updated_at', None)
 
     @staticmethod  # static means it does not need to be instantiated
     def validate_user(user):  # validate user info

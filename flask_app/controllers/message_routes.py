@@ -13,3 +13,4 @@ def save_message():
     Message.save(request.form)
 
     return redirect(f'/show/{request.form["task_id"]}')
+

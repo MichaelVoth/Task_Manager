@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="/static/style.css">
+
 </head>
 
 <body>
@@ -66,20 +67,33 @@
                                                 <input type="submit" value="Take On">
                                             </form>
                                         </td>
-                                        
                                     </tr>
                                     {%endfor%}
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
-
                 </div>
             </div>
             <div id="footer">
             </div>
         </div>
+        {% if tasks_with_unread_messages %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var tasksWithUnreadMessages = {{ tasks_with_unread_messages | tojson | safe}};
+
+            if (tasksWithUnreadMessages.length > 0) {
+                var alertMessage = 'You have unread messages in the following tasks:\n\n';
+                tasksWithUnreadMessages.forEach(function (task) {
+                    alertMessage += 'Title: ' + task.title + '\n';
+                });
+                alert(alertMessage);
+            }});
+        </script>
+        {% endif %}
+
 </body>
+
 
 </html>
