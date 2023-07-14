@@ -1,99 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block title %} Dashboard {% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+{% block content %}
+<div class="flex">
+    <div class="col">
+        <h2>{{user.first_name}}'s Tasks</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Due Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a_task in tasks %}
+                <tr>
+                    <td><a href="/show/{{ a_task.id }}">{{ a_task.title }}</a></td>
+                    <td>{{ a_task.due_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col">
+        <h2>Available Tasks</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Due Date</th>
+                    <th>Take On</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a_task in available_tasks %}
+                <tr>
+                    <td><a href="/show/{{ a_task.id }}">{{ a_task.title }}</a></td>
+                    <td>{{ a_task.due_date }}</td>
+                    <td>
+                        <form action="/add/assignee/{{ user.id }}/task/{{ a_task.id }}" method="POST">
+                            <input type="submit" value="Take On">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
-</head>
+{% if tasks_with_unread_messages %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tasksWithUnreadMessages = {{ tasks_with_unread_messages | tojson | safe }};
 
-<body>
-    <div id="wrapper">
-        <div id="container">
-            <div id="header"></div>
-            <div id="content">
-                <div class="xlg_col">
-                    <div class="nav">
-                        <h1>Welcome {{user.first_name}}!</h1>
-                        <div>
-                            {% if session['admin'] %}
-                            <a href="/create">Create Task</a>
-                            <a href="/task/overview">Task Overview</a>
-                            {% endif %}
-                            <a href="/logout">Logout</a>
-                        </div>
-                    </div>
-
-                    <div class="flex">
-                        <div class="col">
-                            <h2>Your Tasks</h2>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Task</th>
-                                        <th>Due Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for a_task in tasks: %}
-                                    <tr>
-                                        <td><a href="/show/{{a_task.id}}">{{a_task.title}}</a></td>
-                                        <td>{{a_task.due_date}}</td>
-                                    </tr>
-                                    {%endfor%}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col">
-                            <h2>Available Tasks</h2>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Task</th>
-                                        <th>Due Date</th>
-                                        <th> Take On</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for a_task in available_tasks %}
-                                    <tr>
-                                        <td><a href="/show/{{a_task.id}}">{{a_task.title}}</a></td>
-                                        <td>{{a_task.due_date}}</td>
-                                        <td>
-                                            <form action="/add/assignee/{{user.id}}/task/{{a_task.id}}" method="POST">
-                                                <input type="submit" value="Take On">
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    {%endfor%}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="footer">
-            </div>
-        </div>
-        {% if tasks_with_unread_messages %}
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var tasksWithUnreadMessages = {{ tasks_with_unread_messages | tojson | safe}};
-
-            if (tasksWithUnreadMessages.length > 0) {
-                var alertMessage = 'You have unread messages in the following tasks:\n\n';
-                tasksWithUnreadMessages.forEach(function (task) {
-                    alertMessage += 'Title: ' + task.title + '\n';
-                });
-                alert(alertMessage);
-            }});
-        </script>
-        {% endif %}
-
-</body>
-
-
-</html>
+        if (tasksWithUnreadMessages.length > 0) {
+            var alertMessage = 'You have unread messages in the following tasks:\n\n';
+            tasksWithUnreadMessages.forEach(function(task) {
+                alertMessage += 'Title: ' + task.title + '\n';
+            });
+            alert(alertMessage);
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}

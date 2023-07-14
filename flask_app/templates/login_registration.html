@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <div class="header"></div>
+            <div class="content">
+                <div class="row">
+                    <div class="col">
+                        <h1 style="text-align: center;">Registration</h1>
+                        <fieldset class="form">
+                            <legend>Create a new user</legend>
+                            <form class="form" action="/register/user" method="POST">
+                                <div class="row">
+                                    <label for="first_name">First Name:</label>
+                                    <input type="text" name="first_name" id="first_name"
+                                        value="{{session['first_name']}}" required>
+                                </div>
+                                <div class="row">
+                                    <label for="last_name">Last Name:</label>
+                                    <input type="text" name="last_name" id="last_name" value="{{session['last_name']}}"
+                                        required>
+                                </div>
+                                <div class="row">
+                                    <label for="email">Email:</label>
+                                    <input type="email" name="email" id="email" value="{{session['email']}}" required>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <label for="password">Password:</label>
+                                    <input type="password" name="password" id="password" required>
+                                </div>
+                                <div class="row">
+                                    <label for="confirm_password">Confirm Password</label>
+                                    <input type="password" name="confirm_password" id="confirm_password" required>
+                                </div>
+                                <div class="row">
+                                    <label for="admin">Admin:</label>
+                                    <input type="checkbox" name="admin" id="admin">
+                                </div>
+                                <br>
+                                <input class="row" type="submit" value="Create">
+                                {% with messages = get_flashed_messages(category_filter=["register"]) %}
+                                {% if messages %}
+                                {% for message in messages %}
+                                <p class="error">{{message}}</p>
+                                {% endfor %}
+                                {% endif %}
+                                {% endwith %}
+                            </form>
+                        </fieldset>
+                    </div>
+
+                    <div class="col">
+                        <h1 style="text-align: center;">Login</h1>
+                        <fieldset class="form">
+                            <legend>Login User:</legend>
+                            <form class="form" action="/login" method="POST">
+                                <div class="row">
+                                    <label for="login_email">Email:</label>
+                                    <input type="email" name="email" id="login_email" required>
+                                </div>
+                                <div class="row">
+                                    <label for="login_password">Password:</label>
+                                    <input type="password" name="password" id="login_password" required>
+                                </div>
+                                <br>
+                                <input class="row" type="submit" value="Login">
+                                {% with messages = get_flashed_messages(category_filter=["login"]) %}
+                                {% if messages %}
+                                {% for message in messages %}
+                                <p class="error">{{message}}</p>
+                                {% endfor %}
+                                {% endif %}
+                                {% endwith %}
+                            </form>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            <div class="footer"></div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
