@@ -3,16 +3,15 @@
 
 {% block content %}
 <form action="/update/{{task.id}}" method="POST">
-    <fieldset class="form">
-        <legend>Edit this task</legend>
-        <label for="title">Title:</label>
-        <input type="text" name="title" id="title" value="{{task.title}}">
+
+        <label for="title" class="form-label">Title:</label>
+        <input type="text" name="title" id="title" class="form-control" value="{{task.title}}">
         <br>
-        <label for="due_date">Due Date:</label>
-        <input type="date" name="due_date" id="due_date" value="{{task.due_date}}">
+        <label for="due_date" class="form-label">Due Date:</label>
+        <input type="date" name="due_date" id="due_date" class="form-control" value="{{task.due_date}}">
         <br>
-        <label for="assignee_id">Assign to:</label>
-        <select name="assignee_id" id="assignee_id">
+        <label for="assignee_id" class="form-label">Assign to:</label>
+        <select name="assignee_id" id="assignee_id" class="form-select" aria-label="Default select example">
             <option value="">Unassigned</option>
             {% for a_user in user %}
             <option value="{{a_user.id}}" {% if a_user.id==task.assignee_id %} selected {% endif %}>
@@ -21,11 +20,11 @@
             {% endfor %}
         </select>
         <br>
-        <label for="details">Details:</label>
+        <label for="details" class="form-label">Details:</label>
         <br>
-        <textarea name="details" id="details" cols="30" rows="10">{{task.details}}</textarea>
+        <textarea name="details" id="details" class="form-control">{{task.details}}</textarea>
         <br>
-        <input class="submit" type="submit" value="Edit Task">
+        <button type="submit" class="btn btn-primary">Edit Task</button>
         {% with messages = get_flashed_messages(category_filter=["create"]) %}
         {% if messages %}
         {% for message in messages %}

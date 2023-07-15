@@ -1,45 +1,48 @@
 {% extends "base.html" %}
 {% block title %} Dashboard {% endblock %}
 
+{% block head %}
+{% endblock %}
+
 {% block content %}
 <div class="flex">
-    <div class="col">
-        <h2>{{user.first_name}}'s Tasks</h2>
-        <table>
+    <div class="col p-1">
+        <h2>{{ user.first_name }}'s Tasks</h2>
+        <table class="table table-success table-striped">
             <thead>
                 <tr>
-                    <th>Task</th>
-                    <th>Due Date</th>
+                    <th scope="col">Task</th>
+                    <th scope="col">Due Date</th>
                 </tr>
             </thead>
             <tbody>
                 {% for a_task in tasks %}
                 <tr>
                     <td><a href="/show/{{ a_task.id }}">{{ a_task.title }}</a></td>
-                    <td>{{ a_task.due_date }}</td>
+                    <td>{{ a_task.due_date.strftime("%b %d") }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    <div class="col">
+    <div class="col p-1">
         <h2>Available Tasks</h2>
-        <table>
+        <table class="table table-success table-striped">
             <thead>
                 <tr>
-                    <th>Task</th>
-                    <th>Due Date</th>
-                    <th>Take On</th>
+                    <th scope="col">Task</th>
+                    <th scope="col">Due Date</th>
+                    <th scope="col">Take On</th>
                 </tr>
             </thead>
             <tbody>
                 {% for a_task in available_tasks %}
                 <tr>
                     <td><a href="/show/{{ a_task.id }}">{{ a_task.title }}</a></td>
-                    <td>{{ a_task.due_date }}</td>
+                    <td>{{ a_task.due_date.strftime("%b %d") }}</td>
                     <td>
                         <form action="/add/assignee/{{ user.id }}/task/{{ a_task.id }}" method="POST">
-                            <input type="submit" value="Take On">
+                            <button type="submit" class="btn btn-outline-primary btn-sm">Take On</button>
                         </form>
                     </td>
                 </tr>
