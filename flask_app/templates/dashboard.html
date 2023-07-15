@@ -1,69 +1,80 @@
-{% extends "base.html" %}
+{% extends "base_dashboard.html" %}
 {% block title %} Dashboard {% endblock %}
 
 {% block head %}
 {% endblock %}
 
 {% block content %}
-<div class="flex">
-    <div class="col p-1">
-        <h2>{{ user.first_name }}'s Tasks</h2>
-        <table class="table table-success table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Task</th>
-                    <th scope="col">Due Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for a_task in tasks %}
-                <tr>
-                    <td><a href="/show/{{ a_task.id }}">{{ a_task.title }}</a></td>
-                    <td>{{ a_task.due_date.strftime("%b %d") }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div class="col p-1">
-        <h2>Available Tasks</h2>
-        <table class="table table-success table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Task</th>
-                    <th scope="col">Due Date</th>
-                    <th scope="col">Take On</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for a_task in available_tasks %}
-                <tr>
-                    <td><a href="/show/{{ a_task.id }}">{{ a_task.title }}</a></td>
-                    <td>{{ a_task.due_date.strftime("%b %d") }}</td>
-                    <td>
-                        <form action="/add/assignee/{{ user.id }}/task/{{ a_task.id }}" method="POST">
-                            <button type="submit" class="btn btn-outline-primary btn-sm">Take On</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+
+<div class="row">
+    <div class="content">
+
+
+        <div class="flex">
+            <div class="col p-1">
+                <h2>{{ user.first_name }}'s Tasks</h2>
+                <table class="table table-success table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Task</th>
+                            <th scope="col">Due Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a_task in tasks %}
+                        <tr>
+                            <td><a href="/show/{{ a_task.id }}">{{ a_task.title }}</a></td>
+                            <td>{{ a_task.due_date.strftime("%b %d") }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col p-1">
+                <h2>Available Tasks</h2>
+                <table class="table table-success table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Task</th>
+                            <th scope="col">Due Date</th>
+                            <th scope="col">Take On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a_task in available_tasks %}
+                        <tr>
+                            <td><a href="/show/{{ a_task.id }}">{{ a_task.title }}</a></td>
+                            <td>{{ a_task.due_date.strftime("%b %d") }}</td>
+                            <td>
+                                <form action="/add/assignee/{{ user.id }}/task/{{ a_task.id }}" method="POST">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Take On</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
 
 {% if tasks_with_unread_messages %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var tasksWithUnreadMessages = {{ tasks_with_unread_messages | tojson | safe }};
+    document.addEventListener('DOMContentLoaded', function () {
+        var tasksWithUnreadMessages = {{ tasks_with_unread_messages | tojson | safe
+    }};
 
-        if (tasksWithUnreadMessages.length > 0) {
-            var alertMessage = 'You have unread messages in the following tasks:\n\n';
-            tasksWithUnreadMessages.forEach(function(task) {
-                alertMessage += 'Title: ' + task.title + '\n';
-            });
-            alert(alertMessage);
-        }
+    if (tasksWithUnreadMessages.length > 0) {
+        var alertMessage = 'You have unread messages in the following tasks:\n\n';
+        tasksWithUnreadMessages.forEach(function (task) {
+            alertMessage += 'Title: ' + task.title + '\n';
+        });
+        alert(alertMessage);
+    }
     });
 </script>
 {% endif %}

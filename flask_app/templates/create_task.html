@@ -1,36 +1,54 @@
 {% extends "base.html" %}
 {% block title %} Create Task {% endblock %}
 {% block content %}
-<form action="/add/task" method="POST">
-    <fieldset class="form">
-        <legend>Add a New Task</legend>
 
-        <label for="title" class="form-label">Title:</label>
-        <input type="text" class="form-control" name="title" id="title">
-        <br>
-        <label for="due_date" class="form-label">Due Date:</label>
-        <input type="date" class="form-control" name="due_date" id="due_date">
-        <br>
-        <label for="assignee_id" class="form-label">Assign to:</label>
-        <select class="form-select" aria-label="Default select example" name="assignee_id" id="assignee_id">
-            <option value="">Unassigned</option>
-            {% for a_user in user %}
-            <option value="{{a_user.id}}">{{a_user.first_name}} {{a_user.last_name}}</option>
-            {% endfor %}
-        </select>
-        <br>
-        <label for="details" class="form-label">Details:</label>
-        <br>
-        <textarea class="form-control" name="details" id="details"></textarea>
-        <br>
-        <button type="submit" class="btn btn-primary">Add Task</button>
-        {% with messages = get_flashed_messages(category_filter=["create"]) %}
-        {% if messages %}
-        {% for message in messages %}
-        <p class="error">{{message}}</p>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
-    </fieldset>
-</form>
-{% endblock %}
+<div class="modal fade" id="task_details_modal" data-bs-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Add New Task</h1>
+                <a href="/dashboard" class="btn-close" aria-label="Close"></a>
+            </div>
+            <div class="modal-body">
+                <form action="/add/task" method="POST">
+                    <label for="title" class="form-label">Title:</label>
+                    <input type="text" class="form-control" name="title" id="title">
+                    <br>
+                    <label for="due_date" class="form-label">Due Date:</label>
+                    <input type="date" class="form-control" name="due_date" id="due_date">
+                    <br>
+                    <label for="assignee_id" class="form-label">Assign to:</label>
+                    <select class="form-select" aria-label="Default select example" name="assignee_id" id="assignee_id">
+                        <option value="">Unassigned</option>
+                        {% for a_user in user %}
+                        <option value="{{a_user.id}}">{{a_user.first_name}} {{a_user.last_name}}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <label for="details" class="form-label">Details:</label>
+                    <br>
+                    <textarea class="form-control" name="details" id="details"></textarea>
+                    <br>
+                    <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add Task</button>
+                    {% with messages = get_flashed_messages(category_filter=["create"]) %}
+                    {% if messages %}
+                    {% for message in messages %}
+                    <p class="error">{{message}}</p>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    {% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $('#task_details_modal').modal('show');
+        });
+    </script>
+    {% endblock %}

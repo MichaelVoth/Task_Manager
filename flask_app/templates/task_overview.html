@@ -1,47 +1,53 @@
-{% extends "base.html" %}
+{% extends "base_dashboard.html" %}
 {% block title %} Task Overview {% endblock %}
 
 {% block content %}
-<h2>All Tasks</h2>
-<div class="container-md">
-    <div class="row">
-<table id="task__overview_table" class="table table-success table-striped">
-    <thead>
-        <tr>
-            <th scope="col">Task</th>
-            <th scope="col">Due Date</th>
-            <th scope="col">Assignee</th>
-            <th scope="col">Complete</th>
-            <th scope="col">Completed on</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for a_task in tasks %}
-        <tr>
-            <td><a href="/show/{{a_task.id}}">{{a_task.title}}</a></td>
-            <td>{{a_task.due_date.strftime("%b %d")}}</td>
-            {% if a_task.assignee_id %}
-            <td><a href="/user/{{a_task.assignee_id}}">{{a_task.assignee.first_name}}
-                    {{a_task.assignee.last_name}}</a></td>
-            {% else %}
-            <td>Unassigned</td>
-            {% endif %}
-            {% if a_task.complete == true %}
-            <td>Yes</td>
-            {% else %}
-            <td>No</td>
-            {% endif %}
-            {% if a_task.completed_on %}
-            <td>{{a_task.completed_on}}</td>
-            {% else %}
-            <td></td>
-            {% endif %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="row">
+    <div class="content">
+
+        <h2>All Tasks</h2>
+        <div class="container-md">
+            <div class="row">
+                <table id="task__overview_table" class="table table-success table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Task</th>
+                            <th scope="col">Due Date</th>
+                            <th scope="col">Assignee</th>
+                            <th scope="col">Complete</th>
+                            <th scope="col">Completed on</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a_task in tasks %}
+                        <tr>
+                            <td><a href="/show/{{a_task.id}}">{{a_task.title}}</a></td>
+                            <td>{{a_task.due_date.strftime("%b %d")}}</td>
+                            {% if a_task.assignee_id %}
+                            <td><a href="/user/{{a_task.assignee_id}}">{{a_task.assignee.first_name}}
+                                    {{a_task.assignee.last_name}}</a></td>
+                            {% else %}
+                            <td>Unassigned</td>
+                            {% endif %}
+                            {% if a_task.complete == true %}
+                            <td>Yes</td>
+                            {% else %}
+                            <td>No</td>
+                            {% endif %}
+                            {% if a_task.completed_on %}
+                            <td>{{a_task.completed_on}}</td>
+                            {% else %}
+                            <td></td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-</div>
+
 {% endblock %}
 
 {% block scripts %}

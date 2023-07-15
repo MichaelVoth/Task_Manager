@@ -2,78 +2,106 @@
 {% block title %} Task Details {% endblock %}
 
 {% block content %}
-<dl class="row">
-    <dt class="col-sm-3">Title:</dt>
-    <dd class="col-sm-9"><strong>{{task.title}}</strong></dd>
-    <dt class="col-sm-3">Due Date:</dt>
-    <dd class="col-sm-9">{{task.due_date.strftime("%d %b %Y")}}</dd>
-    <dt class="col-sm-3">Details:</dt>
-    <dd class="col-sm-9">{{task.details}}</dd>
-</dl>
-<div class="center">
-<div class="btn-group" role="group" aria-label="Basic example">
-    {% if task.complete == false or task.complete is none %}
-    <form action="/complete/{{task.id}}" method="post">
-        <button type="submit" class="btn btn-primary">Mark Complete</button>
-    </form>
-    {% else %}
-    <form action="/incomplete/{{task.id}}" method="post">
-        <button type="submit" class="btn btn-primary">Mark Incomplete</button>
-    </form>
-    {% endif %}
-    {% if session['admin'] %}
-    <a class="btn btn-secondary" href="/edit/{{task.id}}">Edit</a>
-    <a class="btn btn-secondary" href="/delete/{{task.id}}">Delete</a>
-    {%endif%}
-</div>
-</div>
-    <h4 class="text-center p-2">Task Messages:</h4>
-<div class="center">
-    <div class="messages">
-        <form action="/message" method="post">
-            <input type="hidden" name="author_id" value="{{ session['user_id'] }}">
-            <input type="hidden" name="task_id" value="{{ task.id }}">
-            <div class="center">
-                <textarea name="message" id="message" class="form-control" placeholder="Message"></textarea>
-                <button type="submit" class="btn btn-primary">Send</button>
+<div class="modal fade" id="task_details_modal" data-bs-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Task Details</h1>
+                <a href="/dashboard" class="btn-close" aria-label="Close"></a>
             </div>
-        </form>
-        </br>
-        {% for message in task.read_messages %}
-        <div class="message-container">
-            {% if message.author.id == session['user_id'] %}
-            <div class="message_right">
-                <p><strong>You said:</strong> {{ message.message }} 
-                    {% if session['user_id'] != task.assignee_id %}
-                    <span class="tiny">(Read)</span>
-                    {% endif %}</p>
-            </div>
-            {% else %}
-            <div class="message_left">
-                <p><strong>{{ message.author.first_name }} {{ message.author.last_name }} said:</strong>
-                    {{ message.message }} 
-                    {% if task.assignee_id != message.author_id %}
-                    <span class="tiny">(Read)</span>
+            <div class="modal-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Title:</dt>
+                    <dd class="col-sm-9"><strong>{{task.title}}</strong></dd>
+                    <dt class="col-sm-3">Due Date:</dt>
+                    <dd class="col-sm-9">{{task.due_date.strftime("%d %b %Y")}}</dd>
+                    <dt class="col-sm-3">Details:</dt>
+                    <dd class="col-sm-9">{{task.details}}</dd>
+                </dl>
+                <div class="row">
+                <div class="btn-group p-3" role="group" aria-label="Basic example">
+                    {% if task.complete == false or task.complete is none %}
+                    <form action="/complete/{{task.id}}" method="post">
+                        <button type="submit" class="btn btn-primary">Mark Complete</button>
+                    </form>
+                    {% else %}
+                    <form action="/incomplete/{{task.id}}" method="post">
+                        <button type="submit" class="btn btn-primary">Mark Incomplete</button>
+                    </form>
                     {% endif %}
-                </p>
-            </div>
-            {% endif %}
-        </div>
-        {% endfor %}
+                    {% if session['admin'] %}
+                    <a class="btn btn-secondary" href="/edit/{{task.id}}">Edit</a>
+                    <a class="btn btn-secondary" href="/delete/{{task.id}}">Delete</a>
+                    {%endif%}
+                </div>
+                </div>
 
-        {% for message in task.unread_messages %}
-        <div class="message-container">
-            {% if message.author.id == session['user_id'] %}
-            <div class="message_right">
-                <p><strong>You said:</strong> {{ message.message }} <span class="tiny">(Unread)</span></p>
+                <h4 class="text-center p-2">Task Comments:</h4>
+                <div class="center">
+
+                    <div class="messages">
+                        <form action="/message" method="post">
+                            <input type="hidden" name="author_id" value="{{ session['user_id'] }}">
+                            <input type="hidden" name="task_id" value="{{ task.id }}">
+                            <div class="center">
+                                <input type="text" name="message" id="message" class="form-control" placeholder="Message">
+                                <button type="submit" class="btn btn-primary">Send</button>
+                            </div>
+                        </form>
+                        
+                        {% for message in task.read_messages %}
+                        <div class="message-container">
+                            {% if message.author.id == session['user_id'] %}
+                            <div class="message_right">
+                                <p><strong>You said:</strong> {{ message.message }}
+                                    {% if session['user_id'] != task.assignee_id %}
+                                    <span class="tiny">(Read)</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            {% else %}
+                            <div class="message_left">
+                                <p><strong>{{ message.author.first_name }} {{ message.author.last_name }} said:</strong>
+                                    {{ message.message }}
+                                    {% if task.assignee_id != message.author_id %}
+                                    <span class="tiny">(Read)</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        {% for message in task.unread_messages %}
+                        <div class="message-container">
+                            {% if message.author.id == session['user_id'] %}
+                            <div class="message_right">
+                                <p><strong>You said:</strong> {{ message.message }} <span class="tiny">(Unread)</span>
+                                </p>
+                            </div>
+                            {% else %}
+                            <div class="message_left">
+                                <p><strong>{{ message.author.first_name }} said:</strong> {{ message.message }} <span
+                                        class="tiny">(Unread)</span></p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="/dashboard" class="btn btn-primary">Close</a>
+                </div>
             </div>
-            {% else %}
-            <div class="message_left">
-                <p><strong>{{ message.author.first_name }} said:</strong> {{ message.message }} <span class="tiny">(Unread)</span></p>
-            </div>
-            {% endif %}
         </div>
-        {% endfor %}
     </div>
-</div>
-</div {% endblock %}
+    {% endblock %}
+    {% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $('#task_details_modal').modal('show');
+        });
+    </script>
+    {% endblock %}
