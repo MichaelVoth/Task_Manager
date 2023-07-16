@@ -10,7 +10,12 @@ bcrypt = Bcrypt(app)
 @app.route('/')
 def index_page():
     #Render the Homepage.
-    return render_template('login_registration.html')
+    return render_template('login.html')
+
+@app.route('/register')
+def register_page():
+    #Render the registration page.
+    return render_template('register.html')
 
 
 @app.route('/register/user', methods=['POST'])
@@ -78,3 +83,32 @@ def user_logout():
     session.clear()
 
     return redirect('/')
+
+
+@app.route("/user/edit/<int:id>")
+def edit_user(id):
+    #Renders the edit user page.
+    user = User.get_by_id({'id': id})
+    return render_template('user_edit.html', user=user)
+
+
+@app.route('/user/update/<int:id>', methods=['POST'])
+def update_user(id):
+    #Updates user data in DB.
+    data = {
+        "id" : id,
+        "first_name" : request.form['first_name'],
+        "last_name" : request.form['last_name'],
+        "email" : request.form['email'],
+        "admin" : 'admin' in request.form
+    }
+    User.update_user_info(data)
+
+    return redirect('/user/{}'.format(id))
+
+@app.route('/user/delete/<int:id>')
+def delete_user(id):
+    #Deletes user from DB.
+    User.delete_user(id)
+
+    return redirect('/task/overview')

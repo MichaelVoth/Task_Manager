@@ -1,0 +1,51 @@
+{% extends "base.html"%}
+{% block title %}Task Manager Login{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<div class="modal fade" id="login_modal" data-bs-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Task Manager Login</h1>
+            </div>
+            <div class="modal-body">
+                <form class="form" action="/login" method="POST">
+                    <div class="row p-3">
+                        <label for="login_email" class="form-label">
+                            Email:</label>
+                        <input type="email" name="email" id="login_email" class="form-control" required>
+                    </div>
+                    <div class="row p-3">
+                        <label for="login_password" class="form-label">
+                            Password:</label>
+                        <input type="password" name="password" id="login_password" class="form-control" required>
+                    </div>
+                    <br>
+                    <div class="modal-footer">
+                        <a href="/register" class="btn btn-secondary">Register</a>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        {% with messages = get_flashed_messages(category_filter=["login"]) %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        <p class="error">{{message}}</p>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#login_modal').modal('show');
+    });
+</script>
+{% endblock %}

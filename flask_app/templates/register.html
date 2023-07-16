@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Register New User{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<div class="modal fade" id="register_modal" data-bs-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Register New User</h1>
+            </div>
+            <div class="modal-body">
+                <form class="form" action="/register/user" method="POST">
+                    <div class="row p-2">
+                        <label 
+                        for="first_name" 
+                        class="form-label">
+                        First Name: </label>
+                        
+                        <input
+                        type="text" 
+                        name="first_name" 
+                        id="first_name" 
+                        class="form-control-sm"
+                        value="{{session['first_name']}}" 
+                        required>
+                    </div>
+                    <div class="row p-2">
+                        
+                        <label 
+                        for="last_name" 
+                        class="form-label">
+                        Last Name: </label>
+                        
+                        <input 
+                        type="text" 
+                        name="last_name" 
+                        id="last_name" 
+                        class="form-control-sm"
+                        value="{{session['last_name']}}"
+                        required>
+                    </div>
+                    <div class="row p-2">
+                        <label 
+                        for="email" 
+                        class="form-label">
+                        Email:</label>
+                        
+                        <input 
+                        type="email" 
+                        name="email" 
+                        id="email" 
+                        class="form-control-sm"
+                        value="{{session['email']}}" 
+                        required>
+                    </div>
+                    <div class="row p-2">
+                        <label 
+                        for="password" 
+                        class="form-label">
+                        Password:</label>
+                        <input 
+                        type="password" 
+                        name="password" 
+                        id="password" 
+                        class="form-control-sm" 
+                        required>
+                    </div>
+                    <div class="row p-2">
+                        <label 
+                        for="confirm_password" 
+                        class="form-label">
+                        Confirm Password</label>
+                        <input 
+                        type="password" 
+                        name="confirm_password" 
+                        id="confirm_password" 
+                        class="form-control-sm" 
+                        required>
+                    </div>
+                    <div class="row p-2">
+                        <div class="form-check form-switch">
+                            <input 
+                            class="form-check-input" 
+                            type="checkbox" 
+                            name="admin" 
+                            id="admin">
+                            <label 
+                            class="form-check-label" 
+                            for="admin">
+                            Admin</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-outline-primary">Create</button>
+                    {% with messages = get_flashed_messages(category_filter=["register"]) %}
+                    {% if messages %}
+                    {% for message in messages %}
+                    <p class="error">{{message}}</p>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#register_modal').modal('show');
+    });
+</script>
+{% endblock %}

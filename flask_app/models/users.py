@@ -95,16 +95,24 @@ class User:
                     first_name = %(first_name)s,
                     last_name = %(last_name)s,
                     email = %(email)s,
-                    password = %(password)s,
                     admin = %(admin)s
                     WHERE id = %(id)s;'''
         
         return connectToMySQL(cls.DB).query_db(query,data)
 
-
 #Delete:
     @classmethod
-    def delete_user(cls, id): # delete user from db
-        query  = "DELETE FROM users WHERE id = %(id)s;"
-        
-        return connectToMySQL(cls.DB).query_db(query, {"id": id}) 
+    def delete_user(cls, id):
+        # Get the IDs of tasks assigned to the user
+        query = "SELECT id FROM tasks WHERE assignee_id = %(assignee_id)s;"
+        assigned_tasks = connectToMySQL(cls.DB).query_db(query, {'assignee_id': id})
+
+        # Delete the user from the database
+        query = "DELETE FROM users WHERE id = %(id)s;"
+        connectToMySQL(cls.DB).query_db(query, {'id': id})
+
+        # Set the assignee of assigned tasks to unassigned (NULL)
+        if assigned_tasks:
+            task_ids = [task['id'] for task in assigned_tasks]
+            query = "UPDATE tasks SET assignee_id = NULL WHERE id IN %(task_ids)s;"
+            connectToMySQL(cls.DB).query_db(query, {'task_ids': task_ids})

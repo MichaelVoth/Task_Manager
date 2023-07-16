@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %} Edit User {% endblock %}
+
+{% block content %}
+
+<div class="modal fade" id="edit_user_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Edit {{user.first_name}}</h1>
+                <a href="/user/{{user.id}}" class="btn-close" aria-label="Close"></a>
+            </div>
+            <div class="modal-body">
+                <form class="form" action="/user/update/{{user.id}}" method="POST">
+                    <div class="row p-2">
+                        <label for="first_name" class="form-label">
+                            First Name: </label>
+                        <input type="text" name="first_name" id="first_name" class="form-control-sm"
+                            value="{{user.first_name}}" required>
+                    </div>
+                    <div class="row p-2">
+                        <label for="last_name" class="form-label">
+                            Last Name: </label>
+                        <input type="text" name="last_name" id="last_name" class="form-control-sm"
+                            value="{{user.last_name}}" required>
+                    </div>
+                    <div class="row p-2">
+                        <label for="email" class="form-label">
+                            Email:</label>
+                        <input type="email" name="email" id="email" class="form-control-sm" value="{{user.email}}"
+                            required>
+                    </div>
+                    <div class="row p-2">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="admin" id="admin" 
+                            {% if user.admin == True %} checked {% endif %}>
+                            <label class="form-check-label" for="admin">
+                                Admin</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/user/delete/{{user.id}}" class="btn btn-outline-danger">Delete User</a>
+                        <button type="submit" class="btn btn-outline-primary">Edit User</button>
+                        {% with messages = get_flashed_messages(category_filter=["register"]) %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        <p class="error">{{message}}</p>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#edit_user_modal').modal('show');
+    });
+</script>
+{% endblock %}
