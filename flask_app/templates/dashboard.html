@@ -8,8 +8,6 @@
 
 <div class="row">
     <div class="content">
-
-
         <div class="flex">
             <div class="col p-1">
                 <h2>{{ user.first_name }}'s Tasks</h2>
@@ -23,7 +21,14 @@
                     <tbody>
                         {% for a_task in tasks %}
                         <tr>
-                            <td><a href="/show/{{ a_task.id }}">{{ a_task.title }}</a></td>
+                            <td>
+                                <a href="/show/{{ a_task.id }}">{{ a_task.title }}</a>
+                                {% for task in tasks_with_unread_messages %}
+                                {% if a_task.id == task['id'] %}
+                                <span class="badge text-bg-danger">Unread</span>
+                                {% endif %}
+                                {% endfor %}
+                            </td>
                             <td>{{ a_task.due_date.strftime("%b %d") }}</td>
                         </tr>
                         {% endfor %}
@@ -58,6 +63,27 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="unread-messages-modal" tabindex="-1" aria-labelledby="unread-messages-modal-label"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="unread-messages-modal-label">You have Unread Messages</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group">
+                    {% for task in tasks_with_unread_messages %}
+                    <li class="list-group-item"><strong>Title:</strong> {{ task.title }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -69,13 +95,11 @@
     }};
 
     if (tasksWithUnreadMessages.length > 0) {
-        var alertMessage = 'You have unread messages in the following tasks:\n\n';
-        tasksWithUnreadMessages.forEach(function (task) {
-            alertMessage += 'Title: ' + task.title + '\n';
-        });
-        alert(alertMessage);
+        var modal = new bootstrap.Modal(document.getElementById('unread-messages-modal'));
+        modal.show();
     }
     });
 </script>
+
 {% endif %}
 {% endblock %}

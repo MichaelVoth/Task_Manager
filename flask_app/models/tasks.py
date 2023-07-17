@@ -149,11 +149,12 @@ class Task:
             JOIN messages ON tasks.id = messages.task_id
             WHERE messages.is_read = 0
             AND tasks.assignee_id = %(user_id)s
+            AND tasks.complete = 0
             GROUP BY tasks.id, tasks.title
         '''
         data = {'user_id': user_id}
         results = connectToMySQL(cls.DB).query_db(query, data)
-        tasks = [{'id': row['id'], 'title': row['title']} for row in results]
+        tasks = [{'id': int(row['id']), 'title': row['title']} for row in results]
         return tasks
 
     
