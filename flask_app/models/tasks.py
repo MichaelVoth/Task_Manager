@@ -27,13 +27,13 @@ class Task:
     def validate_task(data):
         is_valid = True
         if len(data['title']) < 3:
-            flash("Title must be at least 3 characters.")
+            flash("Title must be at least 3 characters.", "task_title")
             is_valid = False
         if not data['due_date']:
-            flash("Due date is required.")
+            flash("Due date is required.", "task_due_date")
             is_valid = False
         if len(data['details']) < 3:
-            flash("Details must be at least 3 characters.")
+            flash("Details must be at least 3 characters.", "task_details")
             is_valid = False
         return is_valid
 

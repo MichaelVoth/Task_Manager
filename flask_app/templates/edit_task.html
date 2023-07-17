@@ -14,18 +14,48 @@
             <div class="modal-body">
                 <form action="/update/{{task.id}}" method="POST">
                     <label for="title" class="form-label">Title:</label>
-                    <input type="text" name="title" id="title" class="form-control" value="{{task.title}}">
+                    <input type="text" name="title" id="title" class="form-control {{validation_class.title}}" value="{{task.title}}">
+                    <div class="valid-feedback">
+                        {% if validation_class.title == 'is-valid' %}
+                        Looks good!
+                        {% endif %}
+                    </div>
+                    <div class="invalid-feedback">
+                        {% if validation_results and validation_results.title %}
+                        {% for message in validation_results.title %}
+                        {{ message }}
+                        {% endfor %}
+                        {% endif %}
+                    </div>
                     <br>
                     <label for="due_date" class="form-label">Due Date:</label>
-                    <input type="date" name="due_date" id="due_date" class="form-control" value="{{task.due_date}}">
+                    <input type="date" name="due_date" id="due_date" class="form-control {{validation_class.due_date}}" value="{{task.due_date}}">
+                    <div class="valid-feedback">
+                        {% if validation_class.due_date == 'is-valid' %}
+                        Looks good!
+                        {% endif %}
+                    </div>
+                    <div class="invalid-feedback">
+                        {% if validation_results and validation_results.due_date %}
+                        {% for message in validation_results.due_date %}
+                        {{ message }}
+                        {% endfor %}
+                        {% endif %}
+                    </div>
                     <br>
                     <label for="assignee_id" class="form-label">Assign to:</label>
                     <select name="assignee_id" id="assignee_id" class="form-select" aria-label="Default select example">
                         <option value="">Unassigned</option>
                         {% for a_user in user %}
-                        <option value="{{a_user.id}}" {% if a_user.id==task.assignee_id %} selected {% endif %}>
-                            {{a_user.first_name}} {{a_user.last_name}}
-                        </option>
+                            {% if a_user.id == task.assignee_id %}
+                                <option value="{{a_user.id}}" selected>
+                                    {{a_user.first_name}} {{a_user.last_name}}
+                                </option>
+                            {% else %}
+                                <option value="{{a_user.id}}">
+                                    {{a_user.first_name}} {{a_user.last_name}}
+                                </option>
+                            {% endif %}
                         {% endfor %}
                     </select>
                     <br>

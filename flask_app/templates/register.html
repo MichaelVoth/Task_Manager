@@ -12,22 +12,36 @@
                 <h1 class="modal-title fs-5">Register New User</h1>
             </div>
             <div class="modal-body">
+                <div class="col p-3">
                 <form class="form" action="/register/user" method="POST">
-                    <div class="row p-2">
+                    <div class="row">
                         <label 
                         for="first_name" 
                         class="form-label">
                         First Name: </label>
                         
                         <input
-                        type="text" 
-                        name="first_name" 
-                        id="first_name" 
-                        class="form-control-sm"
-                        value="{{session['first_name']}}" 
-                        required>
+                        type="text"
+                        name="first_name"
+                        id="first_name"
+                        class="form-control {{validation_class.first_name}}"
+                        value="{{ session['first_name'] }}"
+                        required
+                        >
+                        <div class="valid-feedback">
+                            {% if validation_class.first_name == 'is-valid' %}
+                            Looks good!
+                            {% endif %}
+                        </div>
+                        <div class="invalid-feedback">
+                            {% if validation_results and validation_results.first_name %}
+                            {% for message in validation_results.first_name %}
+                            {{ message }}
+                            {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="row p-2">
+                    <div class="row">
                         
                         <label 
                         for="last_name" 
@@ -38,25 +52,50 @@
                         type="text" 
                         name="last_name" 
                         id="last_name" 
-                        class="form-control-sm"
+                        class="form-control {{validation_class.last_name}}"
                         value="{{session['last_name']}}"
-                        required>
+                        required
+                        >
+                        <div class="valid-feedback">
+                            {% if validation_class.last_name == 'is-valid' %}
+                            Looks good!
+                            {% endif %}
+                        </div>
+                        <div class="invalid-feedback">
+                            {% if validation_results and validation_results.last_name %}
+                            {% for message in validation_results.last_name %}
+                            {{ message }}
+                            {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="row p-2">
+                    <div class="row">
                         <label 
                         for="email" 
                         class="form-label">
                         Email:</label>
-                        
                         <input 
                         type="email" 
                         name="email" 
                         id="email" 
-                        class="form-control-sm"
+                        class="form-control {{validation_class.email}}"
                         value="{{session['email']}}" 
-                        required>
+                        required
+                        >
+                        <div class="valid-feedback">
+                            {% if validation_class.email == 'is-valid' %}
+                            Looks good!
+                            {% endif %}
+                        </div>
+                        <div class="invalid-feedback">
+                            {% if validation_results and validation_results.email %}
+                            {% for message in validation_results.email %}
+                            {{ message }}
+                            {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="row p-2">
+                    <div class="row">
                         <label 
                         for="password" 
                         class="form-label">
@@ -65,10 +104,18 @@
                         type="password" 
                         name="password" 
                         id="password" 
-                        class="form-control-sm" 
-                        required>
+                        class="form-control {{validation_class.password}}" 
+                        required
+                        >
+                        <div class="invalid-feedback">
+                            {% if validation_results and validation_results.password %}
+                            {% for message in validation_results.password %}
+                            {{ message }}
+                            {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="row p-2">
+                    <div class="row">
                         <label 
                         for="confirm_password" 
                         class="form-label">
@@ -77,10 +124,17 @@
                         type="password" 
                         name="confirm_password" 
                         id="confirm_password" 
-                        class="form-control-sm" 
-                        required>
+                        class="form-control {{validation_class.confirm_password}}" 
+                        required
+                        >
+                        <div class="invalid-feedback">
+                            {% if validation_results and validation_results.confirm_password %}
+                            {% for message in validation_results.confirm_password %}
+                            {{ message }}
+                            {% endfor %}
+                            {% endif %}
                     </div>
-                    <div class="row p-2">
+                    <div class="row">
                         <div class="form-check form-switch">
                             <input 
                             class="form-check-input" 
@@ -96,15 +150,9 @@
                     <div class="modal-footer">
                         <a href="/" class="btn btn-outline-secondary">Cancel</a>
                     <button type="submit" class="btn btn-outline-primary">Create</button>
-                    {% with messages = get_flashed_messages(category_filter=["register"]) %}
-                    {% if messages %}
-                    {% for message in messages %}
-                    <p class="error">{{message}}</p>
-                    {% endfor %}
-                    {% endif %}
-                    {% endwith %}
                     </div>
                 </form>
+                </div>
             </div>
         </div>
     </div>

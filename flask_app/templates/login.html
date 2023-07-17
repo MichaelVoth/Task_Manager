@@ -16,24 +16,35 @@
                     <div class="row p-3">
                         <label for="login_email" class="form-label">
                             Email:</label>
-                        <input type="email" name="email" id="login_email" class="form-control" required>
+                        <input type="email" name="email" id="login_email" class="form-control {{validation_class.email}}" value="{{session['email']}}" >
+                        <div class="valid-feedback">
+                            {% if validation_class.email == 'is-valid' %}
+                            Looks good!
+                            {% endif %}
+                        </div>
+                        <div class="invalid-feedback">
+                            {% if validation_results and validation_results.email %}
+                            {% for message in validation_results.email %}
+                            {{ message }}
+                            {% endfor %}
+                            {% endif %}
                     </div>
                     <div class="row p-3">
                         <label for="login_password" class="form-label">
                             Password:</label>
-                        <input type="password" name="password" id="login_password" class="form-control" required>
+                        <input type="password" name="password" id="login_password" class="form-control {{validation_class.password}}" >
+                        <div class="invalid-feedback">
+                            {% if validation_results and validation_results.password %}
+                            {% for message in validation_results.password %}
+                            {{ message }}
+                            {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
                     <br>
                     <div class="modal-footer">
                         <a href="/register" class="btn btn-secondary">Register</a>
                         <button type="submit" class="btn btn-primary">Login</button>
-                        {% with messages = get_flashed_messages(category_filter=["login"]) %}
-                        {% if messages %}
-                        {% for message in messages %}
-                        <p class="error">{{message}}</p>
-                        {% endfor %}
-                        {% endif %}
-                        {% endwith %}
                     </div>
                 </form>
             </div>

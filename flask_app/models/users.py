@@ -27,26 +27,26 @@ class User:
         is_valid = True
         if not len(user['first_name']) >= 3 or not str.isalpha(user['first_name']):
             flash(
-                "First name must be at least 2 characters and contain only letters.", 'register')
+                "First name must be at least 2 characters and contain only letters.", 'register_first_name')
             is_valid = False
         if not len(user['last_name']) >= 3 or not str.isalpha(user['last_name']):
             flash(
-                "Last name must be at least 2 characters and contain only letters.", 'register')
+                "Last name must be at least 2 characters and contain only letters.", 'register_last_name')
             is_valid = False
         if not EMAIL_REGEX.match(user['email']):
-            flash("Invalid email address!", 'register')
+            flash("Invalid email address.", 'register_email')
             is_valid = False
-        if not len(user['password']) >= 9:
-            flash('Invalid password. Must contain at least 8 characters.', 'register')
+        if not len(user['password']) >= 8:
+            flash('Password must contain at least 8 characters.', 'register_password')
             is_valid = False
-        if not str.isalpha(user['password']) == False:
-            flash('Password must contain at least 1 number', 'register')
+        if not any(char.isdigit() for char in user['password']):
+            flash('Password must contain at least 1 number', 'register_password')
             is_valid = False
-        if not str.islower(user['password']) == False:
-            flash("Password must contain at least 1 capital letter", 'register')
+        if not any(char.isupper() for char in user['password']):
+            flash("Password must contain at least 1 capital letter", 'register_password')
             is_valid = False
         if not user['password'] == user['confirm_password']:
-            flash('Passwords must match', 'register')
+            flash('Passwords must match', 'register_confirm')
             is_valid = False
 
         return is_valid
