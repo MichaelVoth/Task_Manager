@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <a href="/user/delete/{{user.id}}" class="btn btn-outline-danger">Delete User</a>
+                        <a href="/user/delete/confirm/{{user.id}}" class="btn btn-outline-danger">Delete User</a>
                         <button type="submit" class="btn btn-outline-primary">Edit User</button>
                         {% with messages = get_flashed_messages(category_filter=["register"]) %}
                         {% if messages %}

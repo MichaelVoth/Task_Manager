@@ -163,3 +163,14 @@ def delete_user(id):
     User.delete_user(id)
 
     return redirect('/task/overview')
+
+#Delete user confirmation page.
+@app.route('/user/delete/confirm/<int:id>')
+def delete_user_confirm(id):
+    if session.get('user_id') is None:
+        return redirect('/')
+    
+    message = "Are you sure you want to DELETE this user? This action cannot be undone."
+    action = "/user/delete/" + str(id)
+    method = "get"
+    return redirect('/confirm?id={}&message={}&action={}&method{}'.format(id, message, action, method))

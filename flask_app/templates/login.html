@@ -16,7 +16,7 @@
                     <div class="row p-3">
                         <label for="login_email" class="form-label">
                             Email:</label>
-                        <input type="email" name="email" id="login_email" class="form-control {{validation_class.email}}" value="{{session['email']}}" >
+                        <input type="email" name="email" id="login_email" class="form-control {{validation_class.email}}" value="{{session['email']}}" required>
                         <div class="valid-feedback">
                             {% if validation_class.email == 'is-valid' %}
                             Looks good!
@@ -32,7 +32,7 @@
                     <div class="row p-3">
                         <label for="login_password" class="form-label">
                             Password:</label>
-                        <input type="password" name="password" id="login_password" class="form-control {{validation_class.password}}" >
+                        <input type="password" name="password" id="login_password" class="form-control {{validation_class.password}}" required>
                         <div class="invalid-feedback">
                             {% if validation_results and validation_results.password %}
                             {% for message in validation_results.password %}

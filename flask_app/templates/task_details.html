@@ -20,21 +20,21 @@
                     <dd class="col-sm-9">{{task.details}}</dd>
                 </dl>
                 <div class="row">
-                <div class="btn-group p-3" role="group" aria-label="Basic example">
-                    {% if task.complete == false or task.complete is none %}
-                    <form action="/complete/{{task.id}}" method="post">
-                        <button type="submit" class="btn btn-primary">Mark Complete</button>
-                    </form>
-                    {% else %}
-                    <form action="/incomplete/{{task.id}}" method="post">
-                        <button type="submit" class="btn btn-primary">Mark Incomplete</button>
-                    </form>
-                    {% endif %}
-                    {% if session['admin'] %}
-                    <a class="btn btn-secondary" href="/edit/{{task.id}}">Edit</a>
-                    <a class="btn btn-secondary" href="/delete/{{task.id}}">Delete</a>
-                    {%endif%}
-                </div>
+                    <div class="btn-group p-3" role="group" aria-label="Basic example">
+                        {% if task.complete == false or task.complete is none %}
+                        <form action="/complete/confirm/{{task.id}}" method="get">
+                            <button type="submit" class="btn btn-primary">Mark Complete</button>
+                        </form>
+                        {% else %}
+                        <form action="/incomplete/{{task.id}}" method="post">
+                            <button type="submit" class="btn btn-primary">Mark Incomplete</button>
+                        </form>
+                        {% endif %}
+                        {% if session['admin'] %}
+                        <a class="btn btn-secondary" href="/edit/{{task.id}}">Edit</a>
+                        <a class="btn btn-secondary" href="/delete/confirm/{{task.id}}">Delete</a>
+                        {%endif%}
+                    </div>
                 </div>
                 <h4 class="text-center p-2">Task Comments:</h4>
                 <div class="center">
@@ -43,11 +43,12 @@
                             <input type="hidden" name="author_id" value="{{ session['user_id'] }}">
                             <input type="hidden" name="task_id" value="{{ task.id }}">
                             <div class="center">
-                                <input type="text" name="message" id="message" class="form-control" placeholder="Message">
+                                <input type="text" name="message" id="message" class="form-control"
+                                    placeholder="Message">
                                 <button type="submit" class="btn btn-primary">Send</button>
                             </div>
                         </form>
-                        
+
                         {% for message in task.read_messages %}
                         <div class="message-container">
                             {% if message.author.id == session['user_id'] %}

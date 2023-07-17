@@ -163,6 +163,18 @@ def update_task(id):
     return redirect('/dashboard')
 
 
+#Mark Delete Task Confirmation
+@app.route('/delete/confirm/<int:id>')
+def delete_task_confirm(id):
+    if session.get('user_id') is None:
+        return redirect('/')
+    
+    message = "Are you sure you want to DELETE this task? This action cannot be undone."
+    action = "/delete/" + str(id)
+    method = "get"
+    return redirect('/confirm?id={}&message={}&action={}&method{}'.format(id, message, action, method))
+
+
 # Delete task from DB.
 @app.route('/delete/<int:id>')  
 def delete_task(id):
@@ -178,7 +190,7 @@ def complete_task(id):
     if session.get('user_id') is None:
         return redirect('/')
     Task.mark_complete({'id': id})
-    return redirect('/show/'+str(id))
+    return redirect('/dashboard')
 
 
 # Mark task as incomplete.
@@ -187,7 +199,19 @@ def incomplete_task(id):
     if session.get('user_id') is None:
         return redirect('/')
     Task.mark_incomplete({'id': id})
-    return redirect('/show/'+str(id))
+    return redirect('/dashboard')
+
+
+# Mark Complete Task Confirmation
+@app.route('/complete/confirm/<int:id>')
+def complete_confirm(id):
+    if session.get('user_id') is None:
+        return redirect('/')
+
+    message = "Are you sure you want to complete this task? You will not be able to come back to it after it is complete!"
+    action = "/complete/" + str(id)
+    method = "POST"
+    return render_template('confirm.html', id=id, message=message, action=action, method=method)
 
 
 # Task overview page.
@@ -210,3 +234,16 @@ def user_overview_page(id):
     complete_tasks = Task.get_complete_tasks_for_user({'id': id})
     incomplete_tasks = Task.get_incomplete_tasks_for_user({'id': id})
     return render_template('user_overview.html', user=user, complete_tasks=complete_tasks, incomplete_tasks=incomplete_tasks)
+
+# Confirmation page
+@app.route('/confirm')
+def confirm_page():
+    if session.get('user_id') is None:
+        return redirect('/')
+
+    id = request.args.get('id')
+    message = request.args.get('message')
+    action = request.args.get('action')
+    method = request.args.get('method')
+
+    return render_template('confirm.html', message=message, action=action, id=id, method=method)

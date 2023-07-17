@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Are you sure?{% endblock %}
+
+{% block content %}
+<div class="modal fade" id="confirmation_modal" data-bs-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Are you sure?</h1>
+                <a href="/dashboard" class="btn-close" aria-label="Close"></a>
+            </div>
+            <div class="modal-body">
+                {{message}}
+                <div class="row">
+                    <form action="{{action}}" method="{{method}}">
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Yes</button>
+                            <a class="btn btn-secondary" href="/dashboard">No</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#confirmation_modal').modal('show');
+    });
+</script>
+{% endblock %}
