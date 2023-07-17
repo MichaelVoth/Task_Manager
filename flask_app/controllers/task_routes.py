@@ -82,6 +82,7 @@ def add_task():
 def add_assignee(id, task_id): 
     if session.get('user_id') is None:
         return redirect('/')
+    
     data = {
         'id': id,
         'task_id': task_id
@@ -180,6 +181,7 @@ def delete_task_confirm(id):
 def delete_task(id):
     if session.get('user_id') is None:
         return redirect('/')
+    
     Task.delete_task({'id': id})
     return redirect('/dashboard')
 
@@ -189,6 +191,7 @@ def delete_task(id):
 def complete_task(id):
     if session.get('user_id') is None:
         return redirect('/')
+    
     Task.mark_complete({'id': id})
     return redirect('/dashboard')
 
@@ -198,6 +201,7 @@ def complete_task(id):
 def incomplete_task(id):
     if session.get('user_id') is None:
         return redirect('/')
+    
     Task.mark_incomplete({'id': id})
     return redirect('/dashboard')
 
@@ -219,6 +223,7 @@ def complete_confirm(id):
 def task_overview_page():
     if session.get('user_id') is None:
         return redirect('/')
+    
     tasks = Task.get_all_tasks()
 # Get user info by id in session.
     user = User.get_by_id({'id': session['user_id']})
@@ -230,6 +235,7 @@ def task_overview_page():
 def user_overview_page(id):
     if session.get('user_id') is None:
         return redirect('/')
+    
     user = User.get_by_id({'id': id})
     complete_tasks = Task.get_complete_tasks_for_user({'id': id})
     incomplete_tasks = Task.get_incomplete_tasks_for_user({'id': id})

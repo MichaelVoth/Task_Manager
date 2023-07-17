@@ -138,6 +138,8 @@ def user_logout():
 #Edit user page.
 @app.route("/user/edit/<int:id>")
 def edit_user(id):
+    if session.get('user_id') is None:
+        return redirect('/')
     user = User.get_by_id({'id': id})
     return render_template('user_edit.html', user=user)
 
@@ -145,6 +147,9 @@ def edit_user(id):
 #Update user route.
 @app.route('/user/update/<int:id>', methods=['POST'])
 def update_user(id):
+    if session.get('user_id') is None:
+        return redirect('/')
+    
     data = {
         "id" : id,
         "first_name" : request.form['first_name'],
@@ -160,6 +165,8 @@ def update_user(id):
 #Delete user route.
 @app.route('/user/delete/<int:id>')
 def delete_user(id):
+    if session.get('user_id') is None:
+        return redirect('/')
     User.delete_user(id)
 
     return redirect('/task/overview')

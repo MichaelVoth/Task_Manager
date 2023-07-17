@@ -18,7 +18,7 @@ class Message:
         self.updated_at = data['updated_at']
         self.author = None
         
-    #Static
+#Static Methods
     @staticmethod
     def validate_message(message):
         is_valid = True
@@ -27,9 +27,9 @@ class Message:
             is_valid = False
         return is_valid
 
-    #Class Methods
+#Class Methods
 
-    #Create
+#Create
     @classmethod
     def save(cls, data):
         query = '''INSERT INTO messages (author_id, task_id, message, is_read)
@@ -37,7 +37,7 @@ class Message:
         return connectToMySQL(cls.DB).query_db(query, data)
 
     
-    #Read
+#Read
     @classmethod
     def get_messages(cls, data):
         query = '''SELECT * FROM messages
@@ -81,18 +81,18 @@ class Message:
         return True
     
 
-    #Update
+#Update
     @classmethod
     def set_read(cls, data):
         query = "UPDATE messages SET is_read = true WHERE id = %(id)s"
         return connectToMySQL(cls.DB).query_db(query, data)
 
 
-    
     @classmethod
     def edit_message(cls, data):
         query = '''UPDATE messages SET message = %(message)s WHERE id = %(id)s;'''
         return connectToMySQL(cls.DB).query_db(query, data)
+
 
     #Delete
     @classmethod

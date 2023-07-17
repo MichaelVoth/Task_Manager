@@ -53,7 +53,6 @@ class User:
 
 
 # Create:
-
     @classmethod  # class means it needs to be instantiated
     def save(cls, data):  # save user to db
         query = '''INSERT INTO users (first_name, last_name, email, password, admin)
