@@ -3,8 +3,8 @@
 
 {% block content %}
 
-<div class="modal fade" id="edit_task_modal" data-bs-backdrop="static" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="edit_task_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -14,7 +14,8 @@
             <div class="modal-body">
                 <form action="/update/{{task.id}}" method="POST">
                     <label for="title" class="form-label">Title:</label>
-                    <input type="text" name="title" id="title" class="form-control {{validation_class.title}}" value="{{task.title}}">
+                    <input type="text" name="title" id="title" class="form-control {{validation_class.title}}"
+                        value="{{task.title}}">
                     <div class="valid-feedback">
                         {% if validation_class.title == 'is-valid' %}
                         Looks good!
@@ -29,7 +30,8 @@
                     </div>
                     <br>
                     <label for="due_date" class="form-label">Due Date:</label>
-                    <input type="date" name="due_date" id="due_date" class="form-control {{validation_class.due_date}}" value="{{task.due_date}}">
+                    <input type="date" name="due_date" id="due_date" class="form-control {{validation_class.due_date}}"
+                        value="{{task.due_date}}">
                     <div class="valid-feedback">
                         {% if validation_class.due_date == 'is-valid' %}
                         Looks good!
@@ -47,31 +49,37 @@
                     <select name="assignee_id" id="assignee_id" class="form-select" aria-label="Default select example">
                         <option value="">Unassigned</option>
                         {% for a_user in user %}
-                            {% if a_user.id == task.assignee_id %}
-                                <option value="{{a_user.id}}" selected>
-                                    {{a_user.first_name}} {{a_user.last_name}}
-                                </option>
-                            {% else %}
-                                <option value="{{a_user.id}}">
-                                    {{a_user.first_name}} {{a_user.last_name}}
-                                </option>
-                            {% endif %}
+                        {% if a_user.id == task.assignee_id %}
+                        <option value="{{a_user.id}}" selected>
+                            {{a_user.first_name}} {{a_user.last_name}}
+                        </option>
+                        {% else %}
+                        <option value="{{a_user.id}}">
+                            {{a_user.first_name}} {{a_user.last_name}}
+                        </option>
+                        {% endif %}
                         {% endfor %}
                     </select>
                     <br>
                     <label for="details" class="form-label">Details:</label>
                     <br>
-                    <textarea name="details" id="details" class="form-control">{{task.details}}</textarea>
+                    <textarea name="details" id="details"
+                        class="form-control {{validation_class.details}}">{{task.details}}</textarea>
+                    <div class="valid-feedback">
+                        {% if validation_class.details == 'is-valid' %}
+                        Looks good!
+                        {% endif %}
+                    </div>
+                    <div class="invalid-feedback">
+                        {% if validation_results and validation_results.details %}
+                        {% for message in validation_results.details %}
+                        {{ message }}
+                        {% endfor %}
+                        {% endif %}
+                    </div>
                     <br>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Edit Task</button>
-                        {% with messages = get_flashed_messages(category_filter=["create"]) %}
-                        {% if messages %}
-                        {% for message in messages %}
-                        <p class="error">{{message}}</p>
-                        {% endfor %}
-                        {% endif %}
-                        {% endwith %}
                     </div>
                 </form>
             </div>
