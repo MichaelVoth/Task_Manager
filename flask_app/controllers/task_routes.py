@@ -56,7 +56,9 @@ def add_task():
         session['title'] = request.form['title']
         session['details'] = request.form['details']
         session['due_date'] = request.form['due_date']
-        session['assignee_id'] = int(request.form['assignee_id'])
+        assignee_id = request.form['assignee_id']
+        session['assignee_id'] = int(assignee_id) if assignee_id else None
+
         return redirect('/create')
 # Task is valid, proceed with saving
     data = {
