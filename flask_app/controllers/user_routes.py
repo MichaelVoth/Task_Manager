@@ -33,10 +33,10 @@ def register_page():
 # Collect validation messages and classes.
     validation_class = None
     validation_results = None
-    register_first_name_messages = get_flashed_messages(category_filter=['register_first_name'])
-    register_last_name_messages = get_flashed_messages(category_filter=['register_last_name'])
-    register_email_messages = get_flashed_messages(category_filter=['register_email'])
-    register_password_messages = get_flashed_messages(category_filter=['register_password'])
+    register_first_name_messages = get_flashed_messages(category_filter=['user_first_name'])
+    register_last_name_messages = get_flashed_messages(category_filter=['user_last_name'])
+    register_email_messages = get_flashed_messages(category_filter=['user_email'])
+    register_password_messages = get_flashed_messages(category_filter=['user_password'])
     register_confirm_messages = get_flashed_messages(category_filter=['register_confirm'])
     register_validation_messages = get_flashed_messages(category_filter=['register_validation'])
     
@@ -140,8 +140,25 @@ def user_logout():
 def edit_user(id):
     if session.get('user_id') is None:
         return redirect('/')
+    validation_results = None
+    validation_class = None
+    first_name_messages = get_flashed_messages(category_filter=['user_first_name'])
+    last_name_messages = get_flashed_messages(category_filter=['user_last_name'])
+    email_messages = get_flashed_messages(category_filter=['user_email'])
+    if first_name_messages or last_name_messages or email_messages:
+        validation_results = {
+            'first_name': first_name_messages,
+            'last_name': last_name_messages,
+            'email': email_messages,
+        }
+        validation_class = {
+            'first_name': 'is-invalid' if first_name_messages else 'is-valid',
+            'last_name': 'is-invalid' if last_name_messages else 'is-valid',
+            'email': 'is-invalid' if email_messages else 'is-valid',
+        }
+    
     user = User.get_by_id({'id': id})
-    return render_template('user_edit.html', user=user)
+    return render_template('user_edit.html', user=user, validation_results=validation_results, validation_class=validation_class)
 
 
 #Update user route.
@@ -149,6 +166,9 @@ def edit_user(id):
 def update_user(id):
     if session.get('user_id') is None:
         return redirect('/')
+    
+    if not User.validate_user_edit(request.form):
+        return redirect('/user/edit/{}'.format(id))
     
     data = {
         "id" : id,

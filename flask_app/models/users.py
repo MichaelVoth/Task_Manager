@@ -22,33 +22,51 @@ class User:
         self.created_at = data.get('created_at', None)
         self.updated_at = data.get('updated_at', None)
 
-    @staticmethod  # static means it does not need to be instantiated
-    def validate_user(user):  # validate user info
+    @staticmethod
+#validate user registration info
+    def validate_user(user):
         is_valid = True
         if not len(user['first_name']) >= 3 or not str.isalpha(user['first_name']):
             flash(
-                "First name must be at least 2 characters and contain only letters.", 'register_first_name')
+                "First name must be at least 2 characters and contain only letters.", 'user_first_name')
             is_valid = False
         if not len(user['last_name']) >= 3 or not str.isalpha(user['last_name']):
             flash(
-                "Last name must be at least 2 characters and contain only letters.", 'register_last_name')
+                "Last name must be at least 2 characters and contain only letters.", 'user_last_name')
             is_valid = False
         if not EMAIL_REGEX.match(user['email']):
-            flash("Invalid email address.", 'register_email')
+            flash("Invalid email address.", 'user_email')
             is_valid = False
         if not len(user['password']) >= 8:
-            flash('Password must contain at least 8 characters.', 'register_password')
+            flash('Password must contain at least 8 characters.', 'user_password')
             is_valid = False
         if not any(char.isdigit() for char in user['password']):
-            flash('Password must contain at least 1 number', 'register_password')
+            flash('Password must contain at least 1 number', 'user_password')
             is_valid = False
         if not any(char.isupper() for char in user['password']):
-            flash("Password must contain at least 1 capital letter", 'register_password')
+            flash("Password must contain at least 1 capital letter", 'user_password')
             is_valid = False
         if not user['password'] == user['confirm_password']:
             flash('Passwords must match', 'register_confirm')
             is_valid = False
 
+        return is_valid
+    
+    @staticmethod
+#Validate user edit info
+    def validate_user_edit(user): 
+        is_valid = True
+        if not len(user['first_name']) >= 3 or not str.isalpha(user['first_name']):
+            flash(
+                "First name must be at least 2 characters and contain only letters.", 'user_first_name')
+            is_valid = False
+        if not len(user['last_name']) >= 3 or not str.isalpha(user['last_name']):
+            flash(
+                "Last name must be at least 2 characters and contain only letters.", 'user_last_name')
+            is_valid = False
+        if not EMAIL_REGEX.match(user['email']):
+            flash("Invalid email address.", 'user_email')
+            is_valid = False
         return is_valid
 
 
