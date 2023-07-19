@@ -138,8 +138,9 @@ def user_logout():
 #Edit user page.
 @app.route("/user/edit/<int:id>")
 def edit_user(id):
-    if session.get('user_id') is None:
+    if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
+
     validation_results = None
     validation_class = None
     first_name_messages = get_flashed_messages(category_filter=['user_first_name'])
@@ -164,8 +165,9 @@ def edit_user(id):
 #Update user route.
 @app.route('/user/update/<int:id>', methods=['POST'])
 def update_user(id):
-    if session.get('user_id') is None:
+    if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
+
     
     if not User.validate_user_edit(request.form):
         return redirect('/user/edit/{}'.format(id))
@@ -185,7 +187,7 @@ def update_user(id):
 #Delete user route.
 @app.route('/user/delete/<int:id>')
 def delete_user(id):
-    if session.get('user_id') is None:
+    if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
     User.delete_user(id)
 
@@ -194,7 +196,7 @@ def delete_user(id):
 #Delete user confirmation page.
 @app.route('/user/delete/confirm/<int:id>')
 def delete_user_confirm(id):
-    if session.get('user_id') is None:
+    if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
     
     message = "Are you sure you want to DELETE this user? This action cannot be undone."

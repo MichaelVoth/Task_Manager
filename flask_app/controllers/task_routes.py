@@ -21,7 +21,7 @@ def dashboard_page():
 # Create task page.
 @app.route('/create')
 def create_task_page():
-    if session.get('user_id') is None:
+    if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
 # Collect validation messages and classes.
     validation_results = None
@@ -48,7 +48,7 @@ def create_task_page():
 # Add task to DB.
 @app.route('/add/task', methods=['POST'])
 def add_task():
-    if session.get('user_id') is None:
+    if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
 # Validate task
     is_valid = Task.validate_task(request.form)
@@ -111,7 +111,7 @@ def show_task_page(id):
 # Edit task page
 @app.route('/edit/<int:id>')  
 def edit_task(id):
-    if session.get('user_id') is None:
+    if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
 # Collect validation messages and classes.
     validation_results = None
@@ -139,7 +139,7 @@ def edit_task(id):
 # Update task in DB.
 @app.route('/update/<int:id>', methods=['POST'])  
 def update_task(id):
-    if session.get('user_id') is None:
+    if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
 # Validate task
     is_valid = Task.validate_task(request.form)
@@ -169,7 +169,7 @@ def update_task(id):
 #Mark Delete Task Confirmation
 @app.route('/delete/confirm/<int:id>')
 def delete_task_confirm(id):
-    if session.get('user_id') is None:
+    if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
     
     message = "Are you sure you want to DELETE this task? This action cannot be undone."
@@ -181,7 +181,7 @@ def delete_task_confirm(id):
 # Delete task from DB.
 @app.route('/delete/<int:id>')  
 def delete_task(id):
-    if session.get('user_id') is None:
+    if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
     
     Task.delete_task({'id': id})
@@ -201,9 +201,8 @@ def complete_task(id):
 # Mark task as incomplete.
 @app.route('/incomplete/<int:id>', methods=["POST"])
 def incomplete_task(id):
-    if session.get('user_id') is None:
+    if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
-    
     Task.mark_incomplete({'id': id})
     return redirect('/dashboard')
 
@@ -223,7 +222,7 @@ def complete_confirm(id):
 # Task overview page.
 @app.route('/task/overview')  
 def task_overview_page():
-    if session.get('user_id') is None:
+    if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
     
     tasks = Task.get_all_tasks()
@@ -235,7 +234,7 @@ def task_overview_page():
 # User details page.
 @app.route('/user/<int:id>')  
 def user_overview_page(id):
-    if session.get('user_id') is None:
+    if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
     
     user = User.get_by_id({'id': id})
