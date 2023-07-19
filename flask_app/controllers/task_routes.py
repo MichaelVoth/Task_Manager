@@ -254,3 +254,4 @@ def confirm_page():
     method = request.args.get('method')
 
     return render_template('confirm.html', message=message, action=action, id=id, method=method)
+
