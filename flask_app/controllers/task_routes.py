@@ -3,6 +3,7 @@ from flask_app import app
 from flask_app.models.users import User
 from flask_app.models.tasks import Task
 from flask_app.models.messages import Message
+import requests
 
 # Dashboard page.
 @app.route('/dashboard')
@@ -15,6 +16,7 @@ def dashboard_page():
     tasks = Task.get_incomplete_tasks_for_user({'id': user_id})
     available_tasks = Task.get_available_tasks()
     tasks_with_unread_messages = Task.get_tasks_with_unread_messages(user_id)
+
 
     return render_template('dashboard.html', user=user, tasks=tasks, available_tasks=available_tasks,tasks_with_unread_messages=tasks_with_unread_messages)
 
@@ -254,3 +256,4 @@ def confirm_page():
     method = request.args.get('method')
 
     return render_template('confirm.html', message=message, action=action, id=id, method=method)
+

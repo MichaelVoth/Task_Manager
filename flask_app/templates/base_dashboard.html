@@ -31,6 +31,8 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">Logout</a>
                     </li>
+                    <li class="nav-item">
+                        <p id="city">{{city}}</p>
                 </ul>
             </div>
         </div>
@@ -45,5 +47,38 @@
 
 {% block scripts %}
 {{ super() }}
+<script>
+window.onload = getLocation;
 
+function getLocation() {
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            getCityFromCoordinates(lat, lon);
+        }, function(error) {
+            console.error("Error occurred: ", error);
+            // Handle error, e.g., show a message to the user
+        });
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+        // Handle this case, e.g., ask the user to enter their city manually
+    }
+}
+
+function getCityFromCoordinates(lat, lon) {
+    var API_KEY = "780b52cec813bd796130f8b9e4167ad8"
+    var URL = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+
+    fetch(URL)
+        .then(response => response.json())
+        .then(data => {
+            var city = data.name;
+            console.log("City:", city);
+        })
+        .catch(error => {
+            console.error("Error fetching city name:", error);
+        });
+}
+</script>
 {% endblock %}
