@@ -244,7 +244,17 @@ def task_overview_page():
     tasks = Task.get_all_tasks()
 # Get user info by id in session.
     user = User.get_by_id({'id': session['user_id']})
-    return render_template('task_overview.html', tasks=tasks, user=user)
+    
+# Get weather data.
+    lat = session.get('lat')
+    lon = session.get('lon')
+    OPENWEATHER_API_KEY = app.config['OPENWEATHER_API_KEY']
+    OPENWEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
+    response = requests.get(OPENWEATHER_URL)
+
+    if response.status_code == 200: # If the request was successful
+        weather_data = response.json()
+    return render_template('task_overview.html', tasks=tasks, user=user, weather_data=weather_data)
 
 
 # User details page.
@@ -256,7 +266,17 @@ def user_overview_page(id):
     user = User.get_by_id({'id': id})
     complete_tasks = Task.get_complete_tasks_for_user({'id': id})
     incomplete_tasks = Task.get_incomplete_tasks_for_user({'id': id})
-    return render_template('user_overview.html', user=user, complete_tasks=complete_tasks, incomplete_tasks=incomplete_tasks)
+
+# Get weather data.
+    lat = session.get('lat')
+    lon = session.get('lon')
+    OPENWEATHER_API_KEY = app.config['OPENWEATHER_API_KEY']
+    OPENWEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
+    response = requests.get(OPENWEATHER_URL)
+
+    if response.status_code == 200: # If the request was successful
+        weather_data = response.json()
+    return render_template('user_overview.html', user=user, complete_tasks=complete_tasks, incomplete_tasks=incomplete_tasks, weather_data=weather_data)
 
 # Confirmation page
 

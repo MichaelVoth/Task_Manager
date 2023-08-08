@@ -99,6 +99,13 @@ def register_user():
     session['user_id'] = user_id
     del session['first_name'], session['last_name'], session['email']
 
+# Add location to session data.
+    session['lat'] = request.form['lat']
+    print('lat', session['lat'])
+    session['lon'] = request.form['lon']
+    print('lon',session['lon'])
+
+
     return redirect("/dashboard")
 
 
