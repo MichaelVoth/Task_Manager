@@ -1,7 +1,8 @@
-from flask import render_template, redirect, request, session, flash, get_flashed_messages
+from flask import render_template, redirect, request, session, flash, get_flashed_messages, request
 from flask_app import app
 from flask_app.models.users import User
 from flask_bcrypt import Bcrypt
+import requests
 
 
 bcrypt = Bcrypt(app)
@@ -122,6 +123,13 @@ def login():
     session['user_id'] = user_in_db.id
     session['admin'] = user_in_db.admin
     del session['email']
+
+# Add location to session data.
+    session['lat'] = request.form['lat']
+    print('lat', session['lat'])
+    session['lon'] = request.form['lon']
+    print('lon',session['lon'])
+
 
     return redirect("/dashboard")
 
