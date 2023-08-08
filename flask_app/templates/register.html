@@ -14,6 +14,8 @@
             <div class="modal-body">
                 <div class="col p-3">
                 <form class="form" action="/register/user" method="POST">
+                    <input type="hidden" name="lat" id="lat">
+                    <input type="hidden" name="lon" id="lon">
                     <div class="row">
                         <label 
                         for="first_name" 
@@ -164,5 +166,14 @@
     $(document).ready(function () {
         $('#register_modal').modal('show');
     });
+
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            $('#lat').val(position.coords.latitude);
+            $('#lon').val(position.coords.longitude);
+        });
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
 </script>
 {% endblock %}
