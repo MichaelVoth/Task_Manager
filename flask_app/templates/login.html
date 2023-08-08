@@ -4,8 +4,8 @@
 {{ super() }}
 {% endblock %}
 {% block content %}
-<div class="modal fade" id="login_modal" data-bs-backdrop="static" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="login_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -14,9 +14,12 @@
             <div class="modal-body">
                 <form class="form" action="/login" method="POST">
                     <div class="row p-3">
+                        <input type="hidden" name="lat" id="lat">
+                        <input type="hidden" name="lon" id="lon">
                         <label for="login_email" class="form-label">
                             Email:</label>
-                        <input type="email" name="email" id="login_email" class="form-control {{validation_class.email}}" value="{{session['email']}}" required>
+                        <input type="email" name="email" id="login_email"
+                            class="form-control {{validation_class.email}}" value="{{session['email']}}" required>
                         <div class="valid-feedback">
                             {% if validation_class.email == 'is-valid' %}
                             Looks good!
@@ -28,24 +31,25 @@
                             {{ message }}
                             {% endfor %}
                             {% endif %}
-                    </div>
-                    <div class="row p-3">
-                        <label for="login_password" class="form-label">
-                            Password:</label>
-                        <input type="password" name="password" id="login_password" class="form-control {{validation_class.password}}" required>
-                        <div class="invalid-feedback">
-                            {% if validation_results and validation_results.password %}
-                            {% for message in validation_results.password %}
-                            {{ message }}
-                            {% endfor %}
-                            {% endif %}
                         </div>
-                    </div>
-                    <br>
-                    <div class="modal-footer">
-                        <a href="/register" class="btn btn-secondary">Register</a>
-                        <button type="submit" class="btn btn-primary">Login</button>
-                    </div>
+                        <div class="row p-3">
+                            <label for="login_password" class="form-label">
+                                Password:</label>
+                            <input type="password" name="password" id="login_password"
+                                class="form-control {{validation_class.password}}" required>
+                            <div class="invalid-feedback">
+                                {% if validation_results and validation_results.password %}
+                                {% for message in validation_results.password %}
+                                {{ message }}
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <br>
+                        <div class="modal-footer">
+                            <a href="/register" class="btn btn-secondary">Register</a>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </div>
                 </form>
             </div>
         </div>
@@ -58,5 +62,16 @@
     $(document).ready(function () {
         $('#login_modal').modal('show');
     });
+
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            $('#lat').val(position.coords.latitude);
+            $('#lon').val(position.coords.longitude);
+        });
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
+
+
 </script>
 {% endblock %}

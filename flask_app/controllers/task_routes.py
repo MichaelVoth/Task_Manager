@@ -1,11 +1,14 @@
-from flask import render_template, redirect, request, session, get_flashed_messages
+from flask import render_template, redirect, request, session, get_flashed_messages, request
 from flask_app import app
 from flask_app.models.users import User
 from flask_app.models.tasks import Task
 from flask_app.models.messages import Message
 import requests
 
+
 # Dashboard page.
+
+
 @app.route('/dashboard')
 def dashboard_page():
     if session.get('user_id') is None:
@@ -16,9 +19,18 @@ def dashboard_page():
     tasks = Task.get_incomplete_tasks_for_user({'id': user_id})
     available_tasks = Task.get_available_tasks()
     tasks_with_unread_messages = Task.get_tasks_with_unread_messages(user_id)
+# Get weather data.
+    lat = session.get('lat')
+    lon = session.get('lon')
+    OPENWEATHER_API_KEY = app.config['OPENWEATHER_API_KEY']
+    OPENWEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
+    response = requests.get(OPENWEATHER_URL)
 
+    if response.status_code == 200: # If the request was successful
+        weather_data = response.json()
+        print(weather_data)
 
-    return render_template('dashboard.html', user=user, tasks=tasks, available_tasks=available_tasks,tasks_with_unread_messages=tasks_with_unread_messages)
+    return render_template('dashboard.html', user=user, tasks=tasks, available_tasks=available_tasks, tasks_with_unread_messages=tasks_with_unread_messages, weather_data=weather_data)
 
 # Create task page.
 @app.route('/create')
@@ -83,10 +95,10 @@ def add_task():
 
 # Add assignee to task.
 @app.route('/add/assignee/<int:id>/task/<int:task_id>', methods=['POST'])
-def add_assignee(id, task_id): 
+def add_assignee(id, task_id):
     if session.get('user_id') is None:
         return redirect('/')
-    
+
     data = {
         'id': id,
         'task_id': task_id
@@ -95,6 +107,8 @@ def add_assignee(id, task_id):
     return redirect('/dashboard')
 
 # Show task details page
+
+
 @app.route('/show/<int:id>')
 def show_task_page(id):
     if session.get('user_id') is None:
@@ -111,7 +125,7 @@ def show_task_page(id):
 
 
 # Edit task page
-@app.route('/edit/<int:id>')  
+@app.route('/edit/<int:id>')
 def edit_task(id):
     if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
@@ -139,7 +153,7 @@ def edit_task(id):
 
 
 # Update task in DB.
-@app.route('/update/<int:id>', methods=['POST'])  
+@app.route('/update/<int:id>', methods=['POST'])
 def update_task(id):
     if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
@@ -168,12 +182,12 @@ def update_task(id):
     return redirect('/dashboard')
 
 
-#Mark Delete Task Confirmation
+# Mark Delete Task Confirmation
 @app.route('/delete/confirm/<int:id>')
 def delete_task_confirm(id):
     if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
-    
+
     message = "Are you sure you want to DELETE this task? This action cannot be undone."
     action = "/delete/" + str(id)
     method = "get"
@@ -181,21 +195,21 @@ def delete_task_confirm(id):
 
 
 # Delete task from DB.
-@app.route('/delete/<int:id>')  
+@app.route('/delete/<int:id>')
 def delete_task(id):
     if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
-    
+
     Task.delete_task({'id': id})
     return redirect('/dashboard')
 
 
 # Mark task as complete.
-@app.route('/complete/<int:id>', methods=["POST"])  
+@app.route('/complete/<int:id>', methods=["POST"])
 def complete_task(id):
     if session.get('user_id') is None:
         return redirect('/')
-    
+
     Task.mark_complete({'id': id})
     return redirect('/dashboard')
 
@@ -222,11 +236,11 @@ def complete_confirm(id):
 
 
 # Task overview page.
-@app.route('/task/overview')  
+@app.route('/task/overview')
 def task_overview_page():
     if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
-    
+
     tasks = Task.get_all_tasks()
 # Get user info by id in session.
     user = User.get_by_id({'id': session['user_id']})
@@ -234,17 +248,19 @@ def task_overview_page():
 
 
 # User details page.
-@app.route('/user/<int:id>')  
+@app.route('/user/<int:id>')
 def user_overview_page(id):
     if 'user_id' not in session or session.get('admin') != True:
         return redirect('/')
-    
+
     user = User.get_by_id({'id': id})
     complete_tasks = Task.get_complete_tasks_for_user({'id': id})
     incomplete_tasks = Task.get_incomplete_tasks_for_user({'id': id})
     return render_template('user_overview.html', user=user, complete_tasks=complete_tasks, incomplete_tasks=incomplete_tasks)
 
 # Confirmation page
+
+
 @app.route('/confirm')
 def confirm_page():
     if session.get('user_id') is None:
@@ -256,4 +272,3 @@ def confirm_page():
     method = request.args.get('method')
 
     return render_template('confirm.html', message=message, action=action, id=id, method=method)
-
