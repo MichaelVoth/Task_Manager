@@ -22,7 +22,7 @@ def dashboard_page():
 # Get weather data.
     lat = session.get('lat')
     lon = session.get('lon')
-    OPENWEATHER_API_KEY = app.config['OPENWEATHER_API_KEY']
+    OPENWEATHER_API_KEY = '780b52cec813bd796130f8b9e4167ad8'
     OPENWEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
     response = requests.get(OPENWEATHER_URL)
 
@@ -248,7 +248,7 @@ def task_overview_page():
 # Get weather data.
     lat = session.get('lat')
     lon = session.get('lon')
-    OPENWEATHER_API_KEY = app.config['OPENWEATHER_API_KEY']
+    OPENWEATHER_API_KEY = '780b52cec813bd796130f8b9e4167ad8'
     OPENWEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
     response = requests.get(OPENWEATHER_URL)
 
@@ -270,7 +270,7 @@ def user_overview_page(id):
 # Get weather data.
     lat = session.get('lat')
     lon = session.get('lon')
-    OPENWEATHER_API_KEY = app.config['OPENWEATHER_API_KEY']
+    OPENWEATHER_API_KEY = '780b52cec813bd796130f8b9e4167ad8'
     OPENWEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
     response = requests.get(OPENWEATHER_URL)
 
