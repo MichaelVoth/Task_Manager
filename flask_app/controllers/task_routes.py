@@ -22,13 +22,14 @@ def dashboard_page():
 # Get weather data.
     lat = session.get('lat')
     lon = session.get('lon')
-    OPENWEATHER_API_KEY = '780b52cec813bd796130f8b9e4167ad8'
-    OPENWEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
-    response = requests.get(OPENWEATHER_URL)
+    weather_data = None
+    if lat and lon:
+        OPENWEATHER_API_KEY = '780b52cec813bd796130f8b9e4167ad8'
+        OPENWEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
+        response = requests.get(OPENWEATHER_URL)
+        if response.status_code == 200:  # If the request was successful
+            weather_data = response.json()
 
-    if response.status_code == 200: # If the request was successful
-        weather_data = response.json()
-        print(weather_data)
 
     return render_template('dashboard.html', user=user, tasks=tasks, available_tasks=available_tasks, tasks_with_unread_messages=tasks_with_unread_messages, weather_data=weather_data)
 
@@ -248,12 +249,14 @@ def task_overview_page():
 # Get weather data.
     lat = session.get('lat')
     lon = session.get('lon')
-    OPENWEATHER_API_KEY = '780b52cec813bd796130f8b9e4167ad8'
-    OPENWEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
-    response = requests.get(OPENWEATHER_URL)
+    weather_data = None
+    if lat and lon:
+        OPENWEATHER_API_KEY = '780b52cec813bd796130f8b9e4167ad8'
+        OPENWEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
+        response = requests.get(OPENWEATHER_URL)
+        if response.status_code == 200:  # If the request was successful
+            weather_data = response.json()
 
-    if response.status_code == 200: # If the request was successful
-        weather_data = response.json()
     return render_template('task_overview.html', tasks=tasks, user=user, weather_data=weather_data)
 
 
@@ -270,12 +273,13 @@ def user_overview_page(id):
 # Get weather data.
     lat = session.get('lat')
     lon = session.get('lon')
-    OPENWEATHER_API_KEY = '780b52cec813bd796130f8b9e4167ad8'
-    OPENWEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
-    response = requests.get(OPENWEATHER_URL)
-
-    if response.status_code == 200: # If the request was successful
-        weather_data = response.json()
+    weather_data = None
+    if lat and lon:
+        OPENWEATHER_API_KEY = '780b52cec813bd796130f8b9e4167ad8'
+        OPENWEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
+        response = requests.get(OPENWEATHER_URL)
+        if response.status_code == 200:  # If the request was successful
+            weather_data = response.json()
     return render_template('user_overview.html', user=user, complete_tasks=complete_tasks, incomplete_tasks=incomplete_tasks, weather_data=weather_data)
 
 # Confirmation page
