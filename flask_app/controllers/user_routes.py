@@ -117,11 +117,11 @@ def register_user():
     session['user_id'] = user_id
     del session['first_name'], session['last_name'], session['email']
 
-# #Weather API call
-#     weather_data = get_weather_data(request.form['lat'], request.form['lon'])
-#     if not weather_data:
-#         flash("Failed to fetch weather data. Please try again later.", 'weather_error')
-#     session['weather_data'] = weather_data
+#Weather API call
+    weather_data = get_weather_data(request.form['lat'], request.form['lon'])
+    if not weather_data:
+        flash("Failed to fetch weather data. Please try again later.", 'weather_error')
+    session['weather_data'] = weather_data
 
     return redirect("/dashboard")
 
@@ -148,11 +148,11 @@ def login():
     session['admin'] = user_in_db.admin
     del session['email']
 
-# #Weather API call.
-#     weather_data = get_weather_data(request.form['lat'], request.form['lon'])
-#     if not weather_data:
-#         flash("Failed to fetch weather data. Please try again later.", 'weather_error')
-#     session['weather_data'] = weather_data
+#Weather API call.
+    weather_data = get_weather_data(request.form['lat'], request.form['lon'])
+    if not weather_data:
+        flash("Failed to fetch weather data. Please try again later.", 'weather_error')
+    session['weather_data'] = weather_data
 
     return redirect("/dashboard")
 
