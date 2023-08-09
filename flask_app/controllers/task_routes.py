@@ -8,7 +8,6 @@ import requests
 
 # Dashboard page.
 
-
 @app.route('/dashboard')
 def dashboard_page():
     if session.get('user_id') is None:
