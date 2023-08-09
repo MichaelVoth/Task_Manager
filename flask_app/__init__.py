@@ -1,9 +1,10 @@
 from flask import Flask  # Import Flask to allow us to create our app
 import os
+import logging
 
 app = Flask(__name__)    # Create a new instance of the Flask class called "app"
 
-
+logging.basicConfig(level=logging.DEBUG) # This will set the logging level to DEBUG
 app.secret_key = "keep it a secret"
 
 # Assuming your Flask app is initialized as 'app'
