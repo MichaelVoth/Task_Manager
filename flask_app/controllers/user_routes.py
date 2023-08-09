@@ -7,6 +7,24 @@ import requests
 
 bcrypt = Bcrypt(app)
 
+def get_weather_data(lat, lon):
+    OPENWEATHER_API_KEY = '780b52cec813bd796130f8b9e4167ad8'
+    OPENWEATHER_URL = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}"
+    try:
+        response = requests.get(OPENWEATHER_URL)
+        response.raise_for_status()  # This will raise an HTTPError for 4xx and 5xx responses
+        return response.json()
+    except requests.HTTPError as http_err:
+        app.logger.error(f"HTTP error occurred: {http_err}")
+        return None
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    app.logger.error("Server Error: %s", (error))
+    return render_template("500.html", error=error), 500
+
+
+
 #Login Page.
 @app.route('/')
 def index_page():
@@ -99,12 +117,11 @@ def register_user():
     session['user_id'] = user_id
     del session['first_name'], session['last_name'], session['email']
 
-# Add location to session data.
-    session['lat'] = request.form['lat']
-    print('lat', session['lat'])
-    session['lon'] = request.form['lon']
-    print('lon',session['lon'])
-
+#Weather API call
+    weather_data = get_weather_data(request.form['lat'], request.form['lon'])
+    if not weather_data:
+        flash("Failed to fetch weather data. Please try again later.", 'weather_error')
+    session['weather_data'] = weather_data
 
     return redirect("/dashboard")
 
@@ -131,12 +148,11 @@ def login():
     session['admin'] = user_in_db.admin
     del session['email']
 
-# Add location to session data.
-    session['lat'] = request.form['lat']
-    print('lat', session['lat'])
-    session['lon'] = request.form['lon']
-    print('lon',session['lon'])
-
+#Weather API call.
+    weather_data = get_weather_data(request.form['lat'], request.form['lon'])
+    if not weather_data:
+        flash("Failed to fetch weather data. Please try again later.", 'weather_error')
+    session['weather_data'] = weather_data
 
     return redirect("/dashboard")
 
